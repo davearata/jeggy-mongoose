@@ -62,7 +62,8 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
+    "jeggy": "^0.0.1",
     "lodash": "^3.9.3",
-    "mongoose-mob": "^0.2.0"
+    "mongoose-mob": "^0.2.1"
   }
 }
