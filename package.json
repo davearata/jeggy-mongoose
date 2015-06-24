@@ -1,6 +1,6 @@
 {
   "name": "jeggy-mongoose",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Jeggy adapter for mongoose",
   "main": "dist/jeggymongoose.js",
   "scripts": {
@@ -55,6 +55,7 @@
     "jshint-stylish": "^2.0.0",
     "mocha": "^2.2.5",
     "mockery": "^1.4.0",
+    "mongoose-merge-plugin": "0.0.5",
     "node-libs-browser": "^0.5.2",
     "run-sequence": "^1.1.1",
     "sinon": "^1.15.3",

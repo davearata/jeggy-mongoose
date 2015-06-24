@@ -46,7 +46,7 @@ describe('MongooseAdapter', function() {
   });
 
   it('should add a collection', function() {
-    adapter.addCollection('test');
+    adapter.addCollection('test', {plugin: sandbox.stub()});
     const collection = adapter.getCollection('test');
     expect(collection).to.be.an('object');
   });

@@ -1,5 +1,6 @@
 import { Adapter } from 'jeggy';
 import mongooseMob from 'mongoose-mob';
+import merge from 'mongoose-merge-plugin';
 import _ from 'lodash';
 
 import { MongooseCollection } from './MongooseCollection';
@@ -7,7 +8,7 @@ import { MongooseCollection } from './MongooseCollection';
 export class MongooseAdapter extends Adapter {
   constructor(mongooseConnection) {
     super();
-    if(_.isString(mongooseConnection)) {
+    if (_.isString(mongooseConnection)) {
       mongooseConnection = mongooseMob.getConnection(mongooseConnection);
     }
 
@@ -17,13 +18,14 @@ export class MongooseAdapter extends Adapter {
 
   addCollection(name, schema) {
     let collection;
-    if(name instanceof MongooseCollection) {
+    if (name instanceof MongooseCollection) {
       collection = name;
       name = collection.name;
     } else {
-      if(!_.isString(name) || _.isEmpty(name)) {
+      if (!_.isString(name) || _.isEmpty(name)) {
         throw new Error('must provide a name when adding a collection');
       }
+      schema.plugin(merge);
       const mongooseModel = mongooseMob.getModel(this.mongooseConnection, name, schema);
       collection = new MongooseCollection(name, mongooseModel);
     }
@@ -32,7 +34,7 @@ export class MongooseAdapter extends Adapter {
   }
 
   getCollection(name) {
-    if(!this.collections[name]) {
+    if (!this.collections[name]) {
       throw new Error('unknown collection: ' + name);
     }
     return this.collections[name];

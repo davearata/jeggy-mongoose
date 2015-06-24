@@ -7,11 +7,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jeggy'), require('mongoose-mob'), require('lodash')) : typeof define === 'function' && define.amd ? define(['exports', 'jeggy', 'mongoose-mob', 'lodash'], factory) : factory(global.jeggymongoose = {}, global.jeggy, global.mongooseMob, global._);
-})(this, function (exports, jeggy, mongooseMob, _) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jeggy'), require('mongoose-mob'), require('mongoose-merge-plugin'), require('lodash')) : typeof define === 'function' && define.amd ? define(['exports', 'jeggy', 'mongoose-mob', 'mongoose-merge-plugin', 'lodash'], factory) : factory(global.jeggymongoose = {}, global.jeggy, global.mongooseMob, global.merge, global._);
+})(this, function (exports, jeggy, mongooseMob, merge, _) {
   'use strict';
 
   mongooseMob = 'default' in mongooseMob ? mongooseMob['default'] : mongooseMob;
+  merge = 'default' in merge ? merge['default'] : merge;
   _ = 'default' in _ ? _['default'] : _;
 
   var MongooseCollection = (function (_jeggy$Collection) {
@@ -80,6 +81,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
     return MongooseCollection;
   })(jeggy.Collection);
 
+  exports.MongooseCollection = MongooseCollection;
+
   var MongooseAdapter = (function (_jeggy$Adapter) {
     function MongooseAdapter(mongooseConnection) {
       _classCallCheck(this, MongooseAdapter);
@@ -106,6 +109,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
           if (!_.isString(name) || _.isEmpty(name)) {
             throw new Error('must provide a name when adding a collection');
           }
+          schema.plugin(merge);
           var mongooseModel = mongooseMob.getModel(this.mongooseConnection, name, schema);
           collection = new MongooseCollection(name, mongooseModel);
         }
@@ -131,7 +135,5 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
   })(jeggy.Adapter);
 
   exports.MongooseAdapter = MongooseAdapter;
-
-  // export { MongooseCollection } from './MongooseCollection';
 });
 //# sourceMappingURL=./jeggymongoose.js.map
