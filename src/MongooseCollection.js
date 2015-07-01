@@ -1,4 +1,5 @@
 import { Collection } from 'jeggy';
+import _ from 'lodash';
 
 export class MongooseCollection extends Collection {
   constructor(name, mongooseModel) {
@@ -17,8 +18,8 @@ export class MongooseCollection extends Collection {
     return this.mongooseModel.findOne(query).exec();
   }
 
-  findById(id) {
-    return this.mongooseModel.findById(id).exec();
+  findById(id, projection) {
+    return this.mongooseModel.findById(id, projection).exec();
   }
 
   create(doc) {
@@ -47,7 +48,9 @@ export class MongooseCollection extends Collection {
           throw new Error('trying to update doc that does not exist id:' + doc._id);
         }
 
-        foundDoc.merge(doc);
+        doc = _.omit(doc, '_id');
+        doc = _.omit(doc, '__v');
+        foundDoc = _.merge(foundDoc.toObject(), doc);
         return foundDoc.save();
       });
   }

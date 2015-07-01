@@ -1,6 +1,5 @@
 import { Adapter } from 'jeggy';
 import mongooseMob from 'mongoose-mob';
-import merge from 'mongoose-merge-plugin';
 import _ from 'lodash';
 
 import { MongooseCollection } from './MongooseCollection';
@@ -25,7 +24,6 @@ export class MongooseAdapter extends Adapter {
       if (!_.isString(name) || _.isEmpty(name)) {
         throw new Error('must provide a name when adding a collection');
       }
-      schema.plugin(merge);
       const mongooseModel = mongooseMob.getModel(this.mongooseConnection, name, schema);
       collection = new MongooseCollection(name, mongooseModel);
     }

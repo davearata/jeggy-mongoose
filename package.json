@@ -65,7 +65,6 @@
   "dependencies": {
     "jeggy": "^0.0.1",
     "lodash": "^3.9.3",
-    "mongoose-merge-plugin": "0.0.5",
     "mongoose-mob": "^0.2.1"
   }
 }
