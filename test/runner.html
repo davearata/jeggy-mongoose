@@ -6,7 +6,7 @@
   <link rel='stylesheet' href='../node_modules/mocha/mocha.css' />
 
   <!-- Polyfill (required by babel) -->
-  <script src='../node_modules/babel/browser-polyfill.js'></script>
+  <script src='../node_modules/babel-core/browser-polyfill.js'></script>
 
   <!-- Testing libraries -->
   <script src='../node_modules/mocha/mocha.js'></script>
@@ -21,7 +21,8 @@
   <script src='../tmp/__spec-build.js'></script>
 
   <!-- Add your tests here -->
-  <script src='unit/index.js'></script>
+  <script src='unit/MongooseAdapter.js'></script>
+  <script src='unit/MongooseCollection.js'></script>
 </head>
 <body>
   <!-- Required for browser reporter -->
