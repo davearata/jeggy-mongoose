@@ -4,6 +4,18 @@ import _ from 'lodash';
 
 import { MongooseCollection } from './MongooseCollection';
 
+const populateDoc = function populateDoc(doc, fieldKey) {
+  return new Promise((resolve, reject) => {
+    doc.populate(fieldKey, (error) => {
+      if(error) {
+        return reject(error);
+      }
+
+      resolve(doc);
+    });
+  });
+};
+
 export class MongooseAdapter extends Adapter {
   constructor(mongooseConnection) {
     super();
@@ -29,6 +41,7 @@ export class MongooseAdapter extends Adapter {
     }
 
     this.collections[name] = collection;
+    return collection;
   }
 
   getCollection(name) {
@@ -40,5 +53,24 @@ export class MongooseAdapter extends Adapter {
 
   getCollections() {
     return this.collections;
+  }
+
+  populate(docs, fieldKey) {
+    if (!docs) {
+      throw new Error('tried to populate a null value');
+    }
+
+    if (!_.isArray(docs)) {
+      docs = [docs];
+    }
+
+    const promises = _.map(docs, doc => {
+      return populateDoc(doc, fieldKey);
+    });
+
+    return Promise.all(promises)
+      .then(() => {
+        return docs;
+      });
   }
 }

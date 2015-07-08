@@ -7,13 +7,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jeggy'), require('mongoose-mob'), require('mongoose-merge-plugin'), require('lodash')) : typeof define === 'function' && define.amd ? define(['exports', 'jeggy', 'mongoose-mob', 'mongoose-merge-plugin', 'lodash'], factory) : factory(global.jeggymongoose = {}, global.jeggy, global.mongooseMob, global.merge, global._);
-})(this, function (exports, jeggy, mongooseMob, merge, _) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jeggy'), require('lodash'), require('mongoose-mob')) : typeof define === 'function' && define.amd ? define(['exports', 'jeggy', 'lodash', 'mongoose-mob'], factory) : factory(global.jeggymongoose = {}, global.jeggy, global._, global.mongooseMob);
+})(this, function (exports, jeggy, _, mongooseMob) {
   'use strict';
 
-  mongooseMob = 'default' in mongooseMob ? mongooseMob['default'] : mongooseMob;
-  merge = 'default' in merge ? merge['default'] : merge;
   _ = 'default' in _ ? _['default'] : _;
+  mongooseMob = 'default' in mongooseMob ? mongooseMob['default'] : mongooseMob;
 
   var MongooseCollection = (function (_jeggy$Collection) {
     function MongooseCollection(name, mongooseModel) {
@@ -40,8 +39,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       }
     }, {
       key: 'findById',
-      value: function findById(id) {
-        return this.mongooseModel.findById(id).exec();
+      value: function findById(id, projection) {
+        return this.mongooseModel.findById(id, projection).exec();
       }
     }, {
       key: 'create',
@@ -72,7 +71,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
             throw new Error('trying to update doc that does not exist id:' + doc._id);
           }
 
-          foundDoc.merge(doc);
+          doc = _.omit(doc, '_id');
+          doc = _.omit(doc, '__v');
+          foundDoc = _.merge(foundDoc.toObject(), doc);
           return foundDoc.save();
         });
       }
@@ -82,6 +83,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
   })(jeggy.Collection);
 
   exports.MongooseCollection = MongooseCollection;
+
+  var _MongooseAdapter__populateDoc = function populateDoc(doc, fieldKey) {
+    return new Promise(function (resolve, reject) {
+      doc.populate(fieldKey, function (error) {
+        if (error) {
+          return reject(error);
+        }
+
+        resolve(doc);
+      });
+    });
+  };
 
   var MongooseAdapter = (function (_jeggy$Adapter) {
     function MongooseAdapter(mongooseConnection) {
@@ -109,12 +122,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
           if (!_.isString(name) || _.isEmpty(name)) {
             throw new Error('must provide a name when adding a collection');
           }
-          schema.plugin(merge);
           var mongooseModel = mongooseMob.getModel(this.mongooseConnection, name, schema);
           collection = new MongooseCollection(name, mongooseModel);
         }
 
         this.collections[name] = collection;
+        return collection;
       }
     }, {
       key: 'getCollection',
@@ -128,6 +141,25 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       key: 'getCollections',
       value: function getCollections() {
         return this.collections;
+      }
+    }, {
+      key: 'populate',
+      value: function populate(docs, fieldKey) {
+        if (!docs) {
+          throw new Error('tried to populate a null value');
+        }
+
+        if (!_.isArray(docs)) {
+          docs = [docs];
+        }
+
+        var promises = _.map(docs, function (doc) {
+          return _MongooseAdapter__populateDoc(doc, fieldKey);
+        });
+
+        return Promise.all(promises).then(function () {
+          return docs;
+        });
       }
     }]);
 
