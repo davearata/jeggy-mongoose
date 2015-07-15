@@ -1,6 +1,6 @@
 {
   "name": "jeggy-mongoose",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Jeggy adapter for mongoose",
   "main": "dist/jeggymongoose.js",
   "scripts": {
@@ -42,7 +42,6 @@
     "gulp-file": "^0.2.0",
     "gulp-filter": "^2.0.2",
     "gulp-istanbul": "^0.10.0",
-    "gulp-jshint": "^1.11.0",
     "gulp-livereload": "^3.8.0",
     "gulp-load-plugins": "^1.0.0-rc.1",
     "gulp-mocha": "^2.1.1",
@@ -52,8 +51,6 @@
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglifyjs": "^0.6.2",
     "isparta": "^3.0.3",
-    "jshint": "2.7.0",
-    "jshint-stylish": "^2.0.0",
     "mocha": "^2.2.5",
     "mockery": "^1.4.0",
     "mongoose-merge-plugin": "0.0.5",

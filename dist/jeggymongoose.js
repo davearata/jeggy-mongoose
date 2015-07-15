@@ -15,6 +15,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
   mongooseMob = 'default' in mongooseMob ? mongooseMob['default'] : mongooseMob;
 
   var MongooseCollection = (function (_jeggy$Collection) {
+    _inherits(MongooseCollection, _jeggy$Collection);
+
     function MongooseCollection(name, mongooseModel) {
       _classCallCheck(this, MongooseCollection);
 
@@ -24,8 +26,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       }
       this.mongooseModel = mongooseModel;
     }
-
-    _inherits(MongooseCollection, _jeggy$Collection);
 
     _createClass(MongooseCollection, [{
       key: 'find',
@@ -74,6 +74,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
           doc = _.omit(doc, '_id');
           doc = _.omit(doc, '__v');
           foundDoc = _.merge(foundDoc.toObject(), doc);
+          _.forEach(_.keys(doc), function (key) {
+            foundDoc.markModified(key);
+          });
           return foundDoc.save();
         });
       }
@@ -97,6 +100,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
   };
 
   var MongooseAdapter = (function (_jeggy$Adapter) {
+    _inherits(MongooseAdapter, _jeggy$Adapter);
+
     function MongooseAdapter(mongooseConnection) {
       _classCallCheck(this, MongooseAdapter);
 
@@ -108,8 +113,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       this.mongooseConnection = mongooseConnection;
       this.collections = {};
     }
-
-    _inherits(MongooseAdapter, _jeggy$Adapter);
 
     _createClass(MongooseAdapter, [{
       key: 'addCollection',
