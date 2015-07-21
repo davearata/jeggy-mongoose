@@ -29,13 +29,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
     _createClass(MongooseCollection, [{
       key: 'find',
-      value: function find(query) {
-        return this.mongooseModel.find(query).exec();
+      value: function find(query, projection) {
+        return this.mongooseModel.find(query, projection).exec();
       }
     }, {
       key: 'findOne',
-      value: function findOne(query) {
-        return this.mongooseModel.findOne(query).exec();
+      value: function findOne(query, projection) {
+        return this.mongooseModel.findOne(query, projection).exec();
       }
     }, {
       key: 'findById',

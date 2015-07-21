@@ -10,12 +10,12 @@ export class MongooseCollection extends Collection {
     this.mongooseModel = mongooseModel;
   }
 
-  find(query) {
-    return this.mongooseModel.find(query).exec();
+  find(query, projection) {
+    return this.mongooseModel.find(query, projection).exec();
   }
 
-  findOne(query) {
-    return this.mongooseModel.findOne(query).exec();
+  findOne(query, projection) {
+    return this.mongooseModel.findOne(query, projection).exec();
   }
 
   findById(id, projection) {

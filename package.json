@@ -1,6 +1,6 @@
 {
   "name": "jeggy-mongoose",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Jeggy adapter for mongoose",
   "main": "dist/jeggymongoose.js",
   "scripts": {
