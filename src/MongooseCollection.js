@@ -50,7 +50,7 @@ export class MongooseCollection extends Collection {
 
         doc = _.omit(doc, '_id');
         doc = _.omit(doc, '__v');
-        foundDoc = _.merge(foundDoc.toObject(), doc);
+        foundDoc = _.assign(foundDoc, doc);
         _.forEach(_.keys(doc), key => {
           foundDoc.markModified(key);
         });
