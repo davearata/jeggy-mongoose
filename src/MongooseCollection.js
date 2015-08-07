@@ -51,6 +51,11 @@ export class MongooseCollection extends Collection {
         doc = _.omit(doc, '_id');
         doc = _.omit(doc, '__v');
         foundDoc = _.assign(foundDoc.toObject(), doc);
+        _.forEach(_.keys(doc), key => {
+          if (!_.isNull && (_.isObject(doc[key]) || _.isArray(doc[key]))) {
+            foundDoc.markModified(key);
+          }
+        });
         return foundDoc.save();
       });
   }

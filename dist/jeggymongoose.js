@@ -74,6 +74,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
           doc = _.omit(doc, '_id');
           doc = _.omit(doc, '__v');
           foundDoc = _.assign(foundDoc.toObject(), doc);
+          _.forEach(_.keys(doc), function (key) {
+            if (!_.isNull && (_.isObject(doc[key]) || _.isArray(doc[key]))) {
+              foundDoc.markModified(key);
+            }
+          });
           return foundDoc.save();
         });
       }
