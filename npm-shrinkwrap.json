@@ -1,6 +1,6 @@
 {
   "name": "jeggy-mongoose",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "dependencies": {
     "jeggy": {
       "version": "0.0.3",
@@ -11,6 +11,11 @@
       "version": "3.10.1",
       "from": "lodash@latest",
       "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz"
+    },
+    "mongoose-merge-plugin": {
+      "version": "0.0.5",
+      "from": "mongoose-merge-plugin@*",
+      "resolved": "https://registry.npmjs.org/mongoose-merge-plugin/-/mongoose-merge-plugin-0.0.5.tgz"
     },
     "mongoose-mob": {
       "version": "0.2.1",

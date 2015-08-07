@@ -1,5 +1,6 @@
 import { Adapter } from 'jeggy';
 import mongooseMob from 'mongoose-mob';
+import merge from 'mongoose-merge-plugin';
 import _ from 'lodash';
 
 import { MongooseCollection } from './MongooseCollection';
@@ -22,6 +23,8 @@ export class MongooseAdapter extends Adapter {
     if (_.isString(mongooseConnection)) {
       mongooseConnection = mongooseMob.getConnection(mongooseConnection);
     }
+
+    mongooseConnection.base.plugin(merge);
 
     this.mongooseConnection = mongooseConnection;
     this.collections = {};

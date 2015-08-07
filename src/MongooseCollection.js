@@ -1,5 +1,4 @@
 import { Collection } from 'jeggy';
-import _ from 'lodash';
 
 export class MongooseCollection extends Collection {
   constructor(name, mongooseModel) {
@@ -48,14 +47,7 @@ export class MongooseCollection extends Collection {
           throw new Error('trying to update doc that does not exist id:' + doc._id);
         }
 
-        doc = _.omit(doc, '_id');
-        doc = _.omit(doc, '__v');
-        foundDoc = _.assign(foundDoc.toObject(), doc);
-        _.forEach(_.keys(doc), key => {
-          if (!_.isNull(doc[key]) && (_.isObject(doc[key]) || _.isArray(doc[key]))) {
-            foundDoc.markModified(key);
-          }
-        });
+        foundDoc.merge(doc);
         return foundDoc.save();
       });
   }

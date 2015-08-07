@@ -1,12 +1,14 @@
 import mongooseMob from 'mongoose-mob';
+import merge from 'mongoose-merge-plugin';
 import { MongooseCollection } from '../../src/MongooseCollection';
 
 const mongoUri = 'mongodb://localhost/jeggy-mongoose-test';
 const mongooseConnection = mongooseMob.getConnection(mongoUri);
+mongooseConnection.base.plugin(merge);
 const mongooseModel = mongooseMob.getModel(mongooseConnection, 'Test', new mongooseMob.Schema({
   arr: [{type: String}],
   data: {
-    str: String
+    str: {type: String}
   }
 }));
 const collection = new MongooseCollection('Test', mongooseModel);
@@ -32,22 +34,6 @@ describe('MongooseCollection e2e', function () {
         expect(updated).to.be.an('object');
         expect(updated.arr[0]).to.be.equal('new test');
         expect(updated.data.str).to.be.equal('12345');
-        done();
-      })
-      .then(null, done);
-  });
-
-  it('should be able to update a field to undefined', function (done) {
-    collection.create({arr: ['test'], data: {str: 'abc123'}})
-      .then((testObj) => {
-        testObj.arr = undefined;
-        testObj.data.str = undefined;
-        return collection.update(testObj);
-      })
-      .then(updated => {
-        expect(updated).to.be.an('object');
-        expect(updated.arr).to.be.equal(undefined);
-        expect(updated.data.str).to.be.equal(undefined);
         done();
       })
       .then(null, done);

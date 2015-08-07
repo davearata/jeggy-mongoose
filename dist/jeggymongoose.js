@@ -7,12 +7,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jeggy'), require('lodash'), require('mongoose-mob')) : typeof define === 'function' && define.amd ? define(['exports', 'jeggy', 'lodash', 'mongoose-mob'], factory) : factory(global.jeggymongoose = {}, global.jeggy, global._, global.mongooseMob);
-})(this, function (exports, jeggy, _, mongooseMob) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jeggy'), require('mongoose-mob'), require('mongoose-merge-plugin'), require('lodash')) : typeof define === 'function' && define.amd ? define(['exports', 'jeggy', 'mongoose-mob', 'mongoose-merge-plugin', 'lodash'], factory) : factory(global.jeggymongoose = {}, global.jeggy, global.mongooseMob, global.merge, global._);
+})(this, function (exports, jeggy, mongooseMob, merge, _) {
   'use strict';
 
-  _ = 'default' in _ ? _['default'] : _;
   mongooseMob = 'default' in mongooseMob ? mongooseMob['default'] : mongooseMob;
+  merge = 'default' in merge ? merge['default'] : merge;
+  _ = 'default' in _ ? _['default'] : _;
 
   var MongooseCollection = (function (_jeggy$Collection) {
     _inherits(MongooseCollection, _jeggy$Collection);
@@ -71,14 +72,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
             throw new Error('trying to update doc that does not exist id:' + doc._id);
           }
 
-          doc = _.omit(doc, '_id');
-          doc = _.omit(doc, '__v');
-          foundDoc = _.assign(foundDoc.toObject(), doc);
-          _.forEach(_.keys(doc), function (key) {
-            if (!_.isNull(doc[key]) && (_.isObject(doc[key]) || _.isArray(doc[key]))) {
-              foundDoc.markModified(key);
-            }
-          });
+          foundDoc.merge(doc);
           return foundDoc.save();
         });
       }
@@ -111,6 +105,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       if (_.isString(mongooseConnection)) {
         mongooseConnection = mongooseMob.getConnection(mongooseConnection);
       }
+
+      mongooseConnection.base.plugin(merge);
 
       this.mongooseConnection = mongooseConnection;
       this.collections = {};
