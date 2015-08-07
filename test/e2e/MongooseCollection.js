@@ -36,4 +36,24 @@ describe('MongooseCollection e2e', function () {
       })
       .then(null, done);
   });
+
+  it('should be able to update a field to null', function (done) {
+    const mongoUri = 'mongodb://localhost/jeggy-mongoose-test';
+    const mongooseConnection = mongooseMob.getConnection(mongoUri);
+    const mongooseModel = mongooseMob.getModel(mongooseConnection, 'Test', new mongooseMob.Schema({
+      arr: [{type: String}]
+    }));
+    const collection = new MongooseCollection('Test', mongooseModel);
+    collection.create({arr: ['test']})
+      .then((testObj) => {
+        testObj.arr = undefined;
+        return collection.update(testObj);
+      })
+      .then(updated => {
+        expect(updated).to.be.an('object');
+        expect(updated.arr).to.be.equal(undefined);
+        done();
+      })
+      .then(null, done);
+  });
 });
