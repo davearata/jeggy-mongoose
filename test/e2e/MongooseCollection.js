@@ -54,4 +54,19 @@ describe('MongooseCollection e2e', function () {
       })
       .then(null, done);
   });
+
+  it('should be able to create many objects', function (done) {
+    const docs = [
+      {arr: ['test']},
+      {arr: ['test1']},
+      {arr: ['test2']}
+    ];
+    collection.insertMany(docs)
+      .then((result) => {
+        expect(result).to.be.an('array');
+        expect(result.length).to.equal(3);
+        done();
+      })
+      .then(null, done);
+  });
 });

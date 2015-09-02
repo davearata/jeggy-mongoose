@@ -4,7 +4,7 @@ var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_ag
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jeggy'), require('mongoose-mob'), require('mongoose-merge-plugin'), require('lodash')) : typeof define === 'function' && define.amd ? define(['exports', 'jeggy', 'mongoose-mob', 'mongoose-merge-plugin', 'lodash'], factory) : factory(global.jeggymongoose = {}, global.jeggy, global.mongooseMob, global.merge, global._);
@@ -49,6 +49,21 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
         return this.mongooseModel.create(doc);
       }
     }, {
+      key: 'insertMany',
+      value: function insertMany(docs) {
+        var _this = this;
+
+        return new Promise(function (resolve, reject) {
+          _this.mongooseModel.collection.insertMany(docs, {}, function (err, result) {
+            if (err) {
+              return reject(err);
+            }
+
+            resolve(result.ops);
+          });
+        });
+      }
+    }, {
       key: 'removeWhere',
       value: function removeWhere(query) {
         return this.mongooseModel.remove(query);
@@ -83,7 +98,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
   exports.MongooseCollection = MongooseCollection;
 
-  var _MongooseAdapter__populateDoc = function populateDoc(doc, fieldKey) {
+  var populateDoc = function populateDoc(doc, fieldKey) {
     return new Promise(function (resolve, reject) {
       doc.populate(fieldKey, function (error) {
         if (error) {
@@ -155,7 +170,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
         }
 
         var promises = _.map(docs, function (doc) {
-          return _MongooseAdapter__populateDoc(doc, fieldKey);
+          return populateDoc(doc, fieldKey);
         });
 
         return Promise.all(promises).then(function () {

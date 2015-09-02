@@ -25,6 +25,18 @@ export class MongooseCollection extends Collection {
     return this.mongooseModel.create(doc);
   }
 
+  insertMany(docs) {
+    return new Promise((resolve, reject) => {
+      this.mongooseModel.collection.insertMany(docs, {}, (err, result) => {
+        if(err) {
+          return reject(err);
+        }
+
+        resolve(result.ops);
+      });
+    });
+  }
+
   removeWhere(query) {
     return this.mongooseModel.remove(query);
   }
