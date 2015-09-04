@@ -63,4 +63,8 @@ export class MongooseCollection extends Collection {
         return foundDoc.save();
       });
   }
+
+  updateMany(ids, update) {
+    return this.mongooseModel.update({_id: {$in: ids}}, update, {multi: true}).exec();
+  }
 }

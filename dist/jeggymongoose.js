@@ -91,6 +91,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
           return foundDoc.save();
         });
       }
+    }, {
+      key: 'updateMany',
+      value: function updateMany(ids, update) {
+        return this.mongooseModel.update({ _id: { $in: ids } }, update, { multi: true }).exec();
+      }
     }]);
 
     return MongooseCollection;

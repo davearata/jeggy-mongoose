@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import mongooseMob from 'mongoose-mob';
 import merge from 'mongoose-merge-plugin';
 import { MongooseCollection } from '../../src/MongooseCollection';
@@ -65,6 +66,33 @@ describe('MongooseCollection e2e', function () {
       .then((result) => {
         expect(result).to.be.an('array');
         expect(result.length).to.equal(3);
+        done();
+      })
+      .then(null, done);
+  });
+
+  it('should be able to update many objects', function (done) {
+    const docs = [
+      {arr: ['test']},
+      {arr: ['test1']},
+      {arr: ['test2']}
+    ];
+    let ids;
+    collection.insertMany(docs)
+      .then(result => {
+        ids = _.pluck(result, '_id');
+        return collection.updateMany(ids, {$set: {'data.str': 'abc'}, $addToSet: {arr: '1234'}});
+      })
+      .then(result => {
+        expect(result.nModified).to.equal(3);
+        return collection.find({_id: {$in: ids}});
+      })
+      .then(updated => {
+        _.forEach(updated, item => {
+          expect(item.data.str).to.equal('abc');
+          expect(item.arr.length).to.equal(2);
+          expect(_.includes(item.arr, '1234')).to.equal(true);
+        });
         done();
       })
       .then(null, done);
