@@ -1,6 +1,6 @@
 {
   "name": "jeggy-mongoose",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "dependencies": {
     "jeggy": {
       "version": "0.2.0",

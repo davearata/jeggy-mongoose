@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Collection } from 'jeggy';
 
 export class MongooseCollection extends Collection {
@@ -59,6 +60,9 @@ export class MongooseCollection extends Collection {
           throw new Error('trying to update doc that does not exist id:' + doc._id);
         }
 
+        if(_.isFunction(doc.toObject)) {
+          doc = doc.toObject();
+        }
         foundDoc.merge(doc);
         return foundDoc.save();
       });

@@ -7,13 +7,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jeggy'), require('mongoose-mob'), require('mongoose-merge-plugin'), require('lodash')) : typeof define === 'function' && define.amd ? define(['exports', 'jeggy', 'mongoose-mob', 'mongoose-merge-plugin', 'lodash'], factory) : factory(global.jeggymongoose = {}, global.jeggy, global.mongooseMob, global.merge, global._);
-})(this, function (exports, jeggy, mongooseMob, merge, _) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash'), require('jeggy'), require('mongoose-mob'), require('mongoose-merge-plugin')) : typeof define === 'function' && define.amd ? define(['exports', 'lodash', 'jeggy', 'mongoose-mob', 'mongoose-merge-plugin'], factory) : factory(global.jeggymongoose = {}, global._, global.jeggy, global.mongooseMob, global.merge);
+})(this, function (exports, _, jeggy, mongooseMob, merge) {
   'use strict';
 
+  _ = 'default' in _ ? _['default'] : _;
   mongooseMob = 'default' in mongooseMob ? mongooseMob['default'] : mongooseMob;
   merge = 'default' in merge ? merge['default'] : merge;
-  _ = 'default' in _ ? _['default'] : _;
 
   var MongooseCollection = (function (_jeggy$Collection) {
     _inherits(MongooseCollection, _jeggy$Collection);
@@ -87,6 +87,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
             throw new Error('trying to update doc that does not exist id:' + doc._id);
           }
 
+          if (_.isFunction(doc.toObject)) {
+            doc = doc.toObject();
+          }
           foundDoc.merge(doc);
           return foundDoc.save();
         });
