@@ -125,12 +125,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
   var MongooseAdapter = (function (_jeggy$Adapter) {
     _inherits(MongooseAdapter, _jeggy$Adapter);
 
-    function MongooseAdapter(mongooseConnection) {
+    function MongooseAdapter(mongooseConnection, opts) {
       _classCallCheck(this, MongooseAdapter);
 
       _get(Object.getPrototypeOf(MongooseAdapter.prototype), 'constructor', this).call(this);
       if (_.isString(mongooseConnection)) {
-        mongooseConnection = mongooseMob.getConnection(mongooseConnection);
+        mongooseConnection = mongooseMob.getConnection(mongooseConnection, opts);
       }
 
       mongooseConnection.base.plugin(merge);

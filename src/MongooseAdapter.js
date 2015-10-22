@@ -18,10 +18,10 @@ const populateDoc = function populateDoc(doc, fieldKey) {
 };
 
 export class MongooseAdapter extends Adapter {
-  constructor(mongooseConnection) {
+  constructor(mongooseConnection, opts) {
     super();
     if (_.isString(mongooseConnection)) {
-      mongooseConnection = mongooseMob.getConnection(mongooseConnection);
+      mongooseConnection = mongooseMob.getConnection(mongooseConnection, opts);
     }
 
     mongooseConnection.base.plugin(merge);
