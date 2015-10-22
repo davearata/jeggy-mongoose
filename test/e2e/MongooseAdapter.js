@@ -49,7 +49,7 @@ describe('MongooseAdapter e2e', function () {
       })
       .then((folder) => {
         folderId = folder.id;
-        return filesColleciton.find({folder: folderId});
+        return filesColleciton.find({folder: folderId}, null, true);
       })
       .then((files) => {
         return mongooseAdapter.populate(files, 'folder', 'folders');

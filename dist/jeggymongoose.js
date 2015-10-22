@@ -30,8 +30,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
     _createClass(MongooseCollection, [{
       key: 'find',
-      value: function find(query, projection) {
-        return this.mongooseModel.find(query, projection).exec();
+      value: function find(query, projection, castToMongoose) {
+        var mongoQuery = this.mongooseModel.find(query, projection);
+        if (castToMongoose !== true) {
+          mongoQuery = mongoQuery.lean();
+        }
+        return mongoQuery.exec();
       }
     }, {
       key: 'findOne',

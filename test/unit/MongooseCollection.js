@@ -13,7 +13,9 @@ describe('MongooseCollection', function() {
       exec: sandbox.stub().returns(promise)
     };
     collection = new MongooseCollection('test', {
-      find: sandbox.stub().returns(execObj),
+      find: sandbox.stub().returns({
+        lean: sandbox.stub().returns(execObj)
+      }),
       findOne: sandbox.stub().returns(execObj),
       findById: sandbox.stub().returns(execObj),
       create: sandbox.stub(),
