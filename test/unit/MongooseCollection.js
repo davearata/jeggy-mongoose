@@ -72,14 +72,13 @@ describe('MongooseCollection', function() {
     }).to.not.throw();
   });
 
-  it('should throw an error if it can not find the doc to remove', (done) => {
+  it('should resolve if it can not find the doc to remove', (done) => {
     collection.remove({_id: 123})
       .then(() => {
-        done(new Error('this should not have resolved'));
+        done();
       })
       .then(null, (reason) => {
-        expect(reason).to.be.an('error');
-        done();
+        done(reason);
       });
   });
 

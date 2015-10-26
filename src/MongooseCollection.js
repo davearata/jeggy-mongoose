@@ -50,7 +50,7 @@ export class MongooseCollection extends Collection {
     return this.mongooseModel.findById(doc._id).exec()
       .then((foundDoc) => {
         if(!foundDoc) {
-          throw new Error('trying to remove doc that does not exist id:' + doc._id);
+          return;
         }
 
         return foundDoc.remove();
