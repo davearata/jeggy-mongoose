@@ -10,11 +10,14 @@ export class MongooseCollection extends Collection {
     this.mongooseModel = mongooseModel;
   }
 
-  find(query, projection, castToMongoose) {
-    let mongoQuery = this.mongooseModel.find(query, projection);
-    if(castToMongoose !== true) {
-      mongoQuery = mongoQuery.lean();
-    }
+  find(query, projection, queryOptions) {
+    queryOptions = queryOptions || {};
+    const options = {
+      lean: queryOptions.castToMongoose !== true,
+      limit: queryOptions.limit,
+      skip: queryOptions.offset
+    };
+    const mongoQuery = this.mongooseModel.find(query, projection, options);
     return mongoQuery.exec();
   }
 
@@ -50,7 +53,7 @@ export class MongooseCollection extends Collection {
     return this.mongooseModel.findById(doc._id).exec()
       .then((foundDoc) => {
         if(!foundDoc) {
-          return;
+          return Promise.resolve();
         }
 
         return foundDoc.remove();

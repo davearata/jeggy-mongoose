@@ -14,17 +14,60 @@ const mongooseModel = mongooseMob.getModel(mongooseConnection, 'Test', new mongo
 }));
 const collection = new MongooseCollection('Test', mongooseModel);
 
-describe('MongooseCollection e2e', function () {
-  it('should be able to instantiate a schema', function (done) {
+describe('MongooseCollection e2e', () => {
+  beforeEach((done) => {
+    collection.removeWhere()
+      .then(() => {
+        done();
+      })
+      .then(null, done);
+  });
+
+  it('should be able to instantiate a schema', done => {
     collection.create({arr: ['test']})
-      .then((testObj) => {
+      .then(testObj => {
         expect(testObj).to.be.an('object');
         done();
       })
       .then(null, done);
   });
 
-  it('should be able to update an object', function (done) {
+  it('should be able to limit a find query', done => {
+    const docs = [
+      {arr: ['test']},
+      {arr: ['test1']},
+      {arr: ['test2']}
+    ];
+    collection.insertMany(docs)
+      .then(() => {
+        return collection.find({}, null, {limit: 1});
+      })
+      .then(result => {
+        expect(result.length).to.equal(1);
+        done();
+      })
+      .then(null, done);
+  });
+
+  it('should be able to offset a find query', done => {
+    const docs = [
+      {arr: ['test']},
+      {arr: ['test1']},
+      {arr: ['test2']}
+    ];
+    collection.insertMany(docs)
+      .then(() => {
+        return collection.find({}, null, {offset: 1});
+      })
+      .then(result => {
+        expect(result.length).to.equal(2);
+        expect(result[0].arr[0]).to.equal('test1');
+        done();
+      })
+      .then(null, done);
+  });
+
+  it('should be able to update an object', done => {
     collection.create({arr: ['test'], data: {str: 'abc123'}})
       .then((testObj) => {
         testObj.arr = ['new test'];
@@ -40,7 +83,7 @@ describe('MongooseCollection e2e', function () {
       .then(null, done);
   });
 
-  it('should be able to update a field to null', function (done) {
+  it('should be able to update a field to null', done => {
     collection.create({arr: ['test'], data: {str: 'abc123'}})
       .then((testObj) => {
         testObj.arr = null;
@@ -56,7 +99,7 @@ describe('MongooseCollection e2e', function () {
       .then(null, done);
   });
 
-  it('should be able to create many objects', function (done) {
+  it('should be able to create many objects', done => {
     const docs = [
       {arr: ['test']},
       {arr: ['test1']},
@@ -71,7 +114,7 @@ describe('MongooseCollection e2e', function () {
       .then(null, done);
   });
 
-  it('should be able to update many objects', function (done) {
+  it('should be able to update many objects', done => {
     const docs = [
       {arr: ['test']},
       {arr: ['test1']},
