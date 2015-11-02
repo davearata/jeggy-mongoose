@@ -33,6 +33,10 @@ export class MongooseCollection extends Collection {
     return this.mongooseModel.create(doc);
   }
 
+  count(query) {
+    return this.mongooseModel.count(query).exec();
+  }
+
   insertMany(docs) {
     return new Promise((resolve, reject) => {
       this.mongooseModel.collection.insertMany(docs, {}, (err, result) => {

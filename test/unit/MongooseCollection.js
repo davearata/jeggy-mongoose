@@ -19,7 +19,8 @@ describe('MongooseCollection', function() {
       create: sandbox.stub(),
       removeWhere: sandbox.stub(),
       remove: sandbox.stub(),
-      update: sandbox.stub()
+      update: sandbox.stub(),
+      count: sandbox.stub().returns(execObj)
     });
   });
 
@@ -55,6 +56,12 @@ describe('MongooseCollection', function() {
   it('should implement create', () => {
     expect(() => {
       collection.create();
+    }).to.not.throw();
+  });
+
+  it('should implement count', () => {
+    expect(() => {
+      collection.count();
     }).to.not.throw();
   });
 

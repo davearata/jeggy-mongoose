@@ -56,6 +56,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
         return this.mongooseModel.create(doc);
       }
     }, {
+      key: 'count',
+      value: function count(query) {
+        return this.mongooseModel.count(query).exec();
+      }
+    }, {
       key: 'insertMany',
       value: function insertMany(docs) {
         var _this = this;

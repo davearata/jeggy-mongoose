@@ -67,6 +67,27 @@ describe('MongooseCollection e2e', () => {
       .then(null, done);
   });
 
+  it('should be able to count', done => {
+    const docs = [
+      {arr: ['test'], data: {str: 'foo'}},
+      {arr: ['test1'], data: {str: 'foo'}},
+      {arr: ['test2'], data: {str: 'bar'}}
+    ];
+    collection.insertMany(docs)
+      .then(() => {
+        return collection.count();
+      })
+      .then(count => {
+        expect(count).to.equal(3);
+        return collection.count({'data.str': 'foo'});
+      })
+      .then(result => {
+        expect(result).to.equal(2);
+        done();
+      })
+      .then(null, done);
+  });
+
   it('should be able to update an object', done => {
     collection.create({arr: ['test'], data: {str: 'abc123'}})
       .then((testObj) => {
