@@ -65,6 +65,7 @@ export class MongooseCollection extends Collection {
   }
 
   update(doc) {
+    const _update = this.update.bind(this);
     return this.mongooseModel.findById(doc._id).exec()
       .then((foundDoc) => {
         if(!foundDoc) {
@@ -75,7 +76,13 @@ export class MongooseCollection extends Collection {
           doc = doc.toObject();
         }
         foundDoc.merge(doc);
-        return foundDoc.save();
+        return foundDoc.save()
+          .then(null, reason => {
+            if(reason.name === 'VersionError') {
+              return _update(foundDoc);
+            }
+            return Promise.reject(reason);
+          });
       });
   }
 
