@@ -40,7 +40,7 @@ export class MongooseCollection extends Collection {
   insertMany(docs) {
     return new Promise((resolve, reject) => {
       this.mongooseModel.collection.insertMany(docs, {}, (err, result) => {
-        if(err) {
+        if (err) {
           return reject(err);
         }
 

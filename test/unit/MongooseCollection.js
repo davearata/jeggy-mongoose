@@ -1,14 +1,16 @@
 import { MongooseCollection } from '../../src/MongooseCollection';
 
-describe('MongooseCollection', function() {
+describe('MongooseCollection', () => {
   let sandbox;
   let collection;
   let promise;
   let resolvedDoc;
 
-  beforeEach(function() {
+  beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    promise = new Promise((resolve) => { resolve(resolvedDoc); });
+    promise = new Promise((resolve) => {
+      resolve(resolvedDoc);
+    });
     const execObj = {
       exec: sandbox.stub().returns(promise)
     };

@@ -1,7 +1,0 @@
-{
-  "destinationFolder": "dist",
-  "exportFileName": "jeggymongoose",
-  "entryFileName": "index",
-  "exportVarName": "jeggymongoose",
-  "mochaGlobals": ["stub", "spy", "expect"]
-}
