@@ -29,7 +29,7 @@ describe('MongooseAdapter e2e', function () {
   });
 
   it('should populate documents', (done) => {
-    this.timeout(5000);
+    setTimeout(done, 5000);
     const filesColleciton = mongooseAdapter.addCollection('File', new mongooseMob.Schema({
       name: String,
       folder: { type: mongooseMob.Schema.Types.ObjectId, ref: 'Folder', required: true},
