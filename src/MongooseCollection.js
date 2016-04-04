@@ -69,7 +69,7 @@ export class MongooseCollection extends Collection {
     return this.mongooseModel.findById(doc._id).exec()
       .then((foundDoc) => {
         if(!foundDoc) {
-          throw new Error('trying to update doc that does not exist id:' + doc._id);
+          throw new Error('trying to update doc that does not exist id: ' + doc._id);
         }
 
         if(_.isFunction(doc.toObject)) {
@@ -88,5 +88,17 @@ export class MongooseCollection extends Collection {
 
   updateMany(ids, update) {
     return this.mongooseModel.update({_id: {$in: ids}}, update, {multi: true}).exec();
+  }
+
+  incrementField(doc, incrementField, incrementValue) {
+    return this.mongooseModel.findById(doc._id).exec()
+      .then((foundDoc) => {
+        if(!foundDoc) {
+          throw new Error('trying to update doc that does not exist id: ' + doc._id);
+        }
+        const incrementOperator = {$inc: {}};
+        incrementOperator.$inc[incrementField] = incrementValue;
+        return this.mongooseModel.update({_id: foundDoc._id}, incrementOperator).exec();
+      });
   }
 }
