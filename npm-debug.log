@@ -1,0 +1,136 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/frankrossi/.nvm/versions/node/v5.1.0/bin/node',
+1 verbose cli   '/Users/frankrossi/.nvm/versions/node/v5.1.0/bin/npm',
+1 verbose cli   'publish',
+1 verbose cli   './' ]
+2 info using npm@3.3.12
+3 info using node@v5.1.0
+4 verbose publish [ './' ]
+5 silly cache add args [ './', null ]
+6 verbose cache add spec ./
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: './',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: './',
+7 silly cache add   spec: '/Users/frankrossi/projects/jeggy-mongoose',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/frankrossi/.npm/jeggy-mongoose/0.9.1/package.tgz not in flight; packing
+9 info lifecycle jeggy-mongoose@0.9.1~prepublish: jeggy-mongoose@0.9.1
+10 verbose lifecycle jeggy-mongoose@0.9.1~prepublish: unsafe-perm in lifecycle true
+11 verbose lifecycle jeggy-mongoose@0.9.1~prepublish: PATH: /Users/frankrossi/.nvm/versions/node/v5.1.0/lib/node_modules/npm/bin/node-gyp-bin:/Users/frankrossi/projects/jeggy-mongoose/node_modules/.bin:/Users/frankrossi/.nvm/versions/node/v5.1.0/bin:/usr/local/lib/node_modules:/usr/local/opt/android-sdk/platform-tools:/usr/local/opt/android-sdk/tools:/usr/local/bin:/usr/local/share:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+12 verbose lifecycle jeggy-mongoose@0.9.1~prepublish: CWD: /Users/frankrossi/projects/jeggy-mongoose
+13 silly lifecycle jeggy-mongoose@0.9.1~prepublish: Args: [ '-c', 'gulp prepublish' ]
+14 silly lifecycle jeggy-mongoose@0.9.1~prepublish: Returned: code: 0  signal: null
+15 verbose tar pack [ '/Users/frankrossi/.npm/jeggy-mongoose/0.9.1/package.tgz',
+15 verbose tar pack   '/Users/frankrossi/projects/jeggy-mongoose' ]
+16 verbose tarball /Users/frankrossi/.npm/jeggy-mongoose/0.9.1/package.tgz
+17 verbose folder /Users/frankrossi/projects/jeggy-mongoose
+18 verbose addLocalTarball adding from inside cache /Users/frankrossi/.npm/jeggy-mongoose/0.9.1/package.tgz
+19 silly cache afterAdd jeggy-mongoose@0.9.1
+20 verbose afterAdd /Users/frankrossi/.npm/jeggy-mongoose/0.9.1/package/package.json not in flight; writing
+21 verbose afterAdd /Users/frankrossi/.npm/jeggy-mongoose/0.9.1/package/package.json written
+22 silly publish { name: 'jeggy-mongoose',
+22 silly publish   version: '0.9.1',
+22 silly publish   description: 'Jeggy adapter for mongoose',
+22 silly publish   files: [ 'dist' ],
+22 silly publish   main: 'dist/index.js',
+22 silly publish   author: { name: 'davearata@dacatech.com' },
+22 silly publish   license: 'MIT',
+22 silly publish   repository:
+22 silly publish    { type: 'git',
+22 silly publish      url: 'git+https://github.com/davearata/jeggy-mongoose.git' },
+22 silly publish   bugs: { url: 'https://github.com/davearata/jeggy-mongoose/issues' },
+22 silly publish   homepage: 'https://github.com/davearata/jeggy-mongoose',
+22 silly publish   devDependencies:
+22 silly publish    { 'babel-core': '^6.1.2',
+22 silly publish      'babel-preset-es2015': '^6.1.2',
+22 silly publish      chai: '^3.4.0',
+22 silly publish      del: '^2.0.2',
+22 silly publish      faker: '^3.0.1',
+22 silly publish      gulp: '^3.6.0',
+22 silly publish      'gulp-babel': '^6.1.0',
+22 silly publish      'gulp-coveralls': '^0.1.0',
+22 silly publish      'gulp-eslint': '^1.0.0',
+22 silly publish      'gulp-exclude-gitignore': '^1.0.0',
+22 silly publish      'gulp-istanbul': '^0.10.2',
+22 silly publish      'gulp-mocha': '^2.0.0',
+22 silly publish      'gulp-nsp': '^2.1.0',
+22 silly publish      'gulp-plumber': '^1.0.0',
+22 silly publish      mocha: '^2.3.3',
+22 silly publish      mockery: '^1.4.0',
+22 silly publish      sinon: '^1.17.2',
+22 silly publish      'sinon-chai': '^2.8.0' },
+22 silly publish   dependencies:
+22 silly publish    { jeggy: '^0.3.0',
+22 silly publish      lodash: '^3.10.1',
+22 silly publish      'mongoose-merge-plugin': '0.0.5',
+22 silly publish      'mongoose-mob': '^0.2.1' },
+22 silly publish   scripts: { prepublish: 'gulp prepublish', test: 'gulp' },
+22 silly publish   readme: '# jeggy-mongoose\n\nJeggy adapter for mongoose\n\n[![Travis build status](http://img.shields.io/travis/indicium/jeggy-mongoose.svg?style=flat)](https://travis-ci.org/indicium/jeggy-mongoose)\n[![Code Climate](https://codeclimate.com/github/indicium/jeggy-mongoose/badges/gpa.svg)](https://codeclimate.com/github/indicium/jeggy-mongoose)\n[![Test Coverage](https://codeclimate.com/github/indicium/jeggy-mongoose/badges/coverage.svg)](https://codeclimate.com/github/indicium/jeggy-mongoose)\n[![Dependency Status](https://david-dm.org/indicium/jeggy-mongoose.svg)](https://david-dm.org/indicium/jeggy-mongoose)\n[![devDependency Status](https://david-dm.org/indicium/jeggy-mongoose/dev-status.svg)](https://david-dm.org/indicium/jeggy-mongoose#info=devDependencies)\n',
+22 silly publish   readmeFilename: 'README.md',
+22 silly publish   gitHead: '3f3f02b48af97bf82fabe74699bc8838d3e1079e',
+22 silly publish   _id: 'jeggy-mongoose@0.9.1',
+22 silly publish   _shasum: '766c3ef7d442b390c85333ded7ad9a9dac46d1d9',
+22 silly publish   _from: '.' }
+23 verbose getPublishConfig undefined
+24 silly mapToRegistry name jeggy-mongoose
+25 silly mapToRegistry using default registry
+26 silly mapToRegistry registry http://192.168.99.100:4873/
+27 silly mapToRegistry uri http://192.168.99.100:4873/jeggy-mongoose
+28 verbose publish registryBase http://192.168.99.100:4873/
+29 silly publish uploading /Users/frankrossi/.npm/jeggy-mongoose/0.9.1/package.tgz
+30 verbose request uri http://192.168.99.100:4873/jeggy-mongoose
+31 verbose request sending authorization for write operation
+32 info attempt registry request try #1 at 12:03:01 PM
+33 verbose request using bearer token for auth
+34 verbose request id 43ef047523ee0f75
+35 http request PUT http://192.168.99.100:4873/jeggy-mongoose
+36 http 409 http://192.168.99.100:4873/jeggy-mongoose
+37 verbose headers { 'x-powered-by': 'Sinopia/1.4.0',
+37 verbose headers   'content-type': 'application/json; charset=utf-8',
+37 verbose headers   'content-length': '46',
+37 verbose headers   vary: 'Accept-Encoding',
+37 verbose headers   'x-status-cat': 'http://flic.kr/p/aV6jzz',
+37 verbose headers   date: 'Mon, 04 Apr 2016 16:03:01 GMT',
+37 verbose headers   connection: 'keep-alive' }
+38 verbose request invalidating /Users/frankrossi/.npm/192.168.99.100_4873/jeggy-mongoose on PUT
+39 verbose request uri http://192.168.99.100:4873/jeggy-mongoose?write=true
+40 verbose request no auth needed
+41 info attempt registry request try #1 at 12:03:01 PM
+42 verbose request using bearer token for auth
+43 http request GET http://192.168.99.100:4873/jeggy-mongoose?write=true
+44 http 200 http://192.168.99.100:4873/jeggy-mongoose?write=true
+45 verbose headers { 'x-powered-by': 'Sinopia/1.4.0',
+45 verbose headers   'content-type': 'application/json; charset=utf-8',
+45 verbose headers   etag: '"4bfdab8a9838432b4aecaa20207e4933"',
+45 verbose headers   vary: 'Accept-Encoding',
+45 verbose headers   'content-encoding': 'gzip',
+45 verbose headers   'x-status-cat': 'http://flic.kr/p/aVuVsF',
+45 verbose headers   date: 'Mon, 04 Apr 2016 16:03:02 GMT',
+45 verbose headers   connection: 'keep-alive',
+45 verbose headers   'transfer-encoding': 'chunked' }
+46 verbose stack Error: cannot modify pre-existing version
+46 verbose stack     at conflictError (/Users/frankrossi/.nvm/versions/node/v5.1.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/publish.js:182:11)
+46 verbose stack     at CachingRegistryClient.putNext (/Users/frankrossi/.nvm/versions/node/v5.1.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/publish.js:145:15)
+46 verbose stack     at /Users/frankrossi/.nvm/versions/node/v5.1.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/publish.js:128:15
+46 verbose stack     at /Users/frankrossi/.nvm/versions/node/v5.1.0/lib/node_modules/npm/lib/cache/caching-client.js:53:8
+46 verbose stack     at f (/Users/frankrossi/.nvm/versions/node/v5.1.0/lib/node_modules/npm/node_modules/once/once.js:17:25)
+46 verbose stack     at /Users/frankrossi/.nvm/versions/node/v5.1.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:76:16
+46 verbose stack     at f (/Users/frankrossi/.nvm/versions/node/v5.1.0/lib/node_modules/npm/node_modules/once/once.js:17:25)
+46 verbose stack     at CachingRegistryClient.<anonymous> (/Users/frankrossi/.nvm/versions/node/v5.1.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:259:12)
+46 verbose stack     at /Users/frankrossi/.nvm/versions/node/v5.1.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:178:7
+46 verbose stack     at Gunzip.onEnd (zlib.js:227:5)
+47 verbose pkgid jeggy-mongoose
+48 verbose cwd /Users/frankrossi/projects/jeggy-mongoose
+49 error Darwin 15.2.0
+50 error argv "/Users/frankrossi/.nvm/versions/node/v5.1.0/bin/node" "/Users/frankrossi/.nvm/versions/node/v5.1.0/bin/npm" "publish" "./"
+51 error node v5.1.0
+52 error npm  v3.3.12
+53 error code EPUBLISHCONFLICT
+54 error publish fail Cannot publish over existing version.
+54 error publish fail Update the 'version' field in package.json and try again.
+54 error publish fail
+54 error publish fail To automatically increment version numbers, see:
+54 error publish fail     npm help version
+55 verbose exit [ 1, true ]
