@@ -21,6 +21,17 @@ export class MongooseCollection extends Collection {
     return mongoQuery.exec();
   }
 
+  findStream(query, projection, queryOptions) {
+    queryOptions = queryOptions || {};
+    const options = {
+      lean: queryOptions.castToMongoose !== true,
+      limit: queryOptions.limit,
+      skip: queryOptions.offset
+    };
+    const mongoQuery = this.mongooseModel.find(query, projection, options);
+    return mongoQuery.stream();
+  }
+
   findOne(query, projection) {
     return this.mongooseModel.findOne(query, projection).exec();
   }
