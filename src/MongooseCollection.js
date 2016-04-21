@@ -21,7 +21,7 @@ export class MongooseCollection extends Collection {
     return mongoQuery.exec();
   }
 
-  findStream(query, projection, queryOptions) {
+  findStream(query, transformFunc, projection, queryOptions) {
     queryOptions = queryOptions || {};
     const options = {
       lean: queryOptions.castToMongoose !== true,
@@ -29,7 +29,11 @@ export class MongooseCollection extends Collection {
       skip: queryOptions.offset
     };
     const mongoQuery = this.mongooseModel.find(query, projection, options);
-    return mongoQuery.stream();
+    const transformObj = {};
+    if(_.isFunction(transformFunc)) {
+      transformObj.transform = transformFunc;
+    }
+    return mongoQuery.stream(transformObj);
   }
 
   findOne(query, projection) {
