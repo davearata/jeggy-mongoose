@@ -36,7 +36,7 @@ export class MongooseCollection extends Collection {
     if(_.isString(populateField)) {
       return mongoQuery.populate(populateField, populateProjection).sort(sortObject).stream(transformObj);
     }
-    return mongoQuery.stream.sort(sortObject).(transformObj);
+    return mongoQuery.sort(sortObject).stream(transformObj);
   }
 
   findOne(query, projection) {
