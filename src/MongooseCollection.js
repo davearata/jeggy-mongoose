@@ -21,7 +21,7 @@ export class MongooseCollection extends Collection {
     return mongoQuery.exec();
   }
 
-  findStream(query, transformFunc, projection, queryOptions, populateField, populateProjection) {
+  findStream(query, transformFunc, projection, queryOptions, populateField, populateProjection, sortObject) {
     queryOptions = queryOptions || {};
     const options = {
       lean: queryOptions.castToMongoose !== true,
@@ -34,9 +34,9 @@ export class MongooseCollection extends Collection {
       transformObj.transform = transformFunc;
     }
     if(_.isString(populateField)) {
-      return mongoQuery.populate(populateField, populateProjection).stream(transformObj);
+      return mongoQuery.populate(populateField, populateProjection).sort(sortObject).stream(transformObj);
     }
-    return mongoQuery.stream(transformObj);
+    return mongoQuery.stream.sort(sortObject).(transformObj);
   }
 
   findOne(query, projection) {
