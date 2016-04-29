@@ -10,14 +10,17 @@ export class MongooseCollection extends Collection {
     this.mongooseModel = mongooseModel;
   }
 
-  find(query, projection, queryOptions) {
+  find(query, projection, queryOptions, sortObject) {
     queryOptions = queryOptions || {};
     const options = {
       lean: queryOptions.castToMongoose !== true,
       limit: queryOptions.limit,
       skip: queryOptions.offset
     };
-    const mongoQuery = this.mongooseModel.find(query, projection, options);
+    let mongoQuery = this.mongooseModel.find(query, projection, options);
+    if (_.isObject(sortObject)) {
+      mongoQuery = mongoQuery.sort(sortObject);
+    }
     return mongoQuery.exec();
   }
 
@@ -39,8 +42,12 @@ export class MongooseCollection extends Collection {
     return mongoQuery.sort(sortObject).stream(transformObj);
   }
 
-  findOne(query, projection) {
-    return this.mongooseModel.findOne(query, projection).exec();
+  findOne(query, projection, sortObject) {
+    var query = this.mongooseModel.findOne(query, projection);
+    if (_.isObject(sortObject)) {
+      query = query.sort(sortObject);
+    }
+    return query.exec();
   }
 
   findById(id, projection) {
