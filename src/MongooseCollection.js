@@ -10,6 +10,13 @@ export class MongooseCollection extends Collection {
     this.mongooseModel = mongooseModel;
   }
 
+  aggregate(expression) {
+    if (!_.isObject(expression) || !_.isArray(expression)) {
+      throw new Error('Aggregate needs an expression or array of expressions to aggregate by');
+    }
+    return this.mongooseModel.aggregate(expression).exec();
+  }
+
   find(query, projection, queryOptions, sortObject) {
     queryOptions = queryOptions || {};
     const options = {
@@ -43,7 +50,7 @@ export class MongooseCollection extends Collection {
   }
 
   findOne(query, projection, sortObject) {
-    var query = this.mongooseModel.findOne(query, projection);
+    query = this.mongooseModel.findOne(query, projection);
     if (_.isObject(sortObject)) {
       query = query.sort(sortObject);
     }
