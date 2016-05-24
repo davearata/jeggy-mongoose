@@ -1,12 +1,12 @@
-import mockery from 'mockery';
+import mockery from 'mockery'
 
 describe('MongooseAdapter', function () {
-  let adapter;
-  let MongooseAdapter;
-  let sandbox;
+  let adapter
+  let MongooseAdapter
+  let sandbox
 
   beforeEach(function () {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.sandbox.create()
     const mongooseMob = {
       getConnection: sandbox.stub().returns({
         base: {
@@ -14,58 +14,58 @@ describe('MongooseAdapter', function () {
         }
       }),
       getModel: sandbox.stub().returns({})
-    };
-    mockery.registerMock('mongoose-mob', mongooseMob);
+    }
+    mockery.registerMock('mongoose-mob', mongooseMob)
     mockery.enable({
       warnOnUnregistered: false,
       useCleanCache: true
-    });
+    })
 
-    MongooseAdapter = require('../../src/MongooseAdapter').MongooseAdapter;
-    adapter = new MongooseAdapter('');
-  });
+    MongooseAdapter = require('../../src/MongooseAdapter').MongooseAdapter
+    adapter = new MongooseAdapter('')
+  })
 
   afterEach(function () {
-    sandbox.restore();
-    mockery.deregisterAll();
-    mockery.disable();
-  });
+    sandbox.restore()
+    mockery.deregisterAll()
+    mockery.disable()
+  })
 
   it('should exist', function () {
-    expect(adapter).to.be.an('object');
-    expect(adapter).to.not.be.a('null');
-    expect(adapter).to.not.be.a('undefined');
-  });
+    expect(adapter).to.be.an('object')
+    expect(adapter).to.not.be.a('null')
+    expect(adapter).to.not.be.a('undefined')
+  })
 
   it('should throw an error when trying to add a collection with no name', function () {
     expect(() => {
-      adapter.addCollection();
-    }).to.throw(Error);
-  });
+      adapter.addCollection()
+    }).to.throw(Error)
+  })
 
   it('should throw an error when trying to add a collection with empty name', function () {
     expect(() => {
-      adapter.addCollection('');
-    }).to.throw(Error);
-  });
+      adapter.addCollection('')
+    }).to.throw(Error)
+  })
 
   it('should add a collection', function () {
-    adapter.addCollection('test', {plugin: sandbox.stub()});
-    const collection = adapter.getCollection('test');
-    expect(collection).to.be.an('object');
-  });
+    adapter.addCollection('test', {plugin: sandbox.stub()})
+    const collection = adapter.getCollection('test')
+    expect(collection).to.be.an('object')
+  })
 
   it('should implement getCollection', function () {
-    adapter.collections = {TestCollection: {}};
+    adapter.collections = {TestCollection: {}}
     expect(() => {
-      adapter.getCollection('TestCollection');
-    }).to.not.throw();
-  });
+      adapter.getCollection('TestCollection')
+    }).to.not.throw()
+  })
 
   it('should throw an error when getCollection is called with an unkown collection', function () {
-    adapter.collections = {TestCollection: {}};
+    adapter.collections = {TestCollection: {}}
     expect(() => {
-      adapter.getCollection('TestCollection2');
-    }).to.throw(Error);
-  });
-});
+      adapter.getCollection('TestCollection2')
+    }).to.throw(Error)
+  })
+})

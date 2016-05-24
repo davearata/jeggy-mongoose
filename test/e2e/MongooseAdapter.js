@@ -1,75 +1,74 @@
-import mongooseMob from 'mongoose-mob';
-import _ from 'lodash';
-import { MongooseAdapter } from '../../src/MongooseAdapter';
-import loadData from '../util/loadFakeData';
+import mongooseMob from 'mongoose-mob'
+import _ from 'lodash'
+import { MongooseAdapter } from '../../src/MongooseAdapter'
+import loadData from '../util/loadFakeData'
 
-const mongoUri = 'mongodb://localhost/jeggy-mongoose-test';
-const mongooseConnection = mongooseMob.getConnection(mongoUri);
+const mongoUri = 'mongodb://localhost/jeggy-mongoose-test'
+const mongooseConnection = mongooseMob.getConnection(mongoUri)
 
 describe('MongooseAdapter e2e', function () {
-  let mongooseAdapter;
+  let mongooseAdapter
 
   beforeEach(() => {
-    mongooseAdapter = new MongooseAdapter(mongooseConnection);
-  });
+    mongooseAdapter = new MongooseAdapter(mongooseConnection)
+  })
 
   it('should be able to instantiate a schema', (done) => {
-
     mongooseAdapter.addCollection('Test', new mongooseMob.Schema({
       arr: [{type: String}]
-    }));
+    }))
 
-    var collection = mongooseAdapter.getCollection('Test');
+    var collection = mongooseAdapter.getCollection('Test')
     collection.create({arr: ['test']})
       .then((testObj) => {
-        expect(testObj).to.be.an('object');
-        done();
+        expect(testObj).to.be.an('object')
+        done()
       })
-      .then(null, done);
-  });
+      .then(null, done)
+  })
 
   it('should populate documents', (done) => {
-    setTimeout(done, 5000);
+    setTimeout(done, 5000)
     const filesColleciton = mongooseAdapter.addCollection('File', new mongooseMob.Schema({
       name: String,
-      folder: { type: mongooseMob.Schema.Types.ObjectId, ref: 'Folder', required: true},
+      folder: { type: mongooseMob.Schema.Types.ObjectId, ref: 'Folder', required: true },
       created: Date,
       url: String
-    }));
+    }))
     const foldersCollection = mongooseAdapter.addCollection('Folder', new mongooseMob.Schema({
       name: String,
-      parent: { type: mongooseMob.Schema.Types.ObjectId, ref: 'Folder'},
+      parent: { type: mongooseMob.Schema.Types.ObjectId, ref: 'Folder' },
       created: Date
-    }));
-    let folderId;
+    }))
+    let folderId
 
     loadData(10, filesColleciton, foldersCollection)
       .then(() => {
-        return foldersCollection.findOne({parent: {$ne: null}});
+        return foldersCollection.findOne({parent: {$ne: null}})
       })
       .then((folder) => {
-        folderId = folder.id;
-        return filesColleciton.find({folder: folderId}, null, {castToMongoose: true});
+        folderId = folder.id
+        return filesColleciton.find({folder: folderId}, null, {castToMongoose: true})
       })
       .then((files) => {
-        return mongooseAdapter.populate(files, 'folder', 'folders');
+        return mongooseAdapter.populate(files, 'folder', 'folders')
       })
       .then((files) => {
         _.each(files, file => {
-          expect(file.folder).to.be.an('object');
-          expect(file.folder._id).to.not.be.a('null');
-        });
+          expect(file.folder).to.be.an('object')
+          expect(file.folder._id).to.not.be.a('null')
+        })
       })
       .then(() => {
-        return filesColleciton.find({folder: folderId});
+        return filesColleciton.find({folder: folderId})
       })
       .then((files) => {
         _.each(files, file => {
-          expect(file.folder).to.be.an('object');
-          expect(file.folder).to.not.have.property('created');
-        });
-        done();
+          expect(file.folder).to.be.an('object')
+          expect(file.folder).to.not.have.property('created')
+        })
+        done()
       })
-      .then(null, done);
-  });
-});
+      .then(null, done)
+  })
+})

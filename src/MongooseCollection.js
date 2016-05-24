@@ -1,146 +1,146 @@
-import _ from 'lodash';
-import { Collection } from 'jeggy';
+import _ from 'lodash'
+import { Collection } from 'jeggy'
 
 export class MongooseCollection extends Collection {
-  constructor(name, mongooseModel) {
-    super(name);
-    if(!mongooseModel) {
-      throw new Error('a MongooseCollection must be intiialized with a mongoose model');
+  constructor (name, mongooseModel) {
+    super(name)
+    if (!mongooseModel) {
+      throw new Error('a MongooseCollection must be intiialized with a mongoose model')
     }
-    this.mongooseModel = mongooseModel;
+    this.mongooseModel = mongooseModel
   }
 
-  addToSet(doc, arrayKey, value) {
+  addToSet (doc, arrayKey, value) {
     const updateObj = {}
     updateObj[arrayKey] = value
     return this.mongooseModel.collection.update({_id: doc._id}, {$addToSet: updateObj})
   }
 
-  aggregate(expression) {
+  aggregate (expression) {
     if (!_.isObject(expression) || !_.isArray(expression)) {
-      throw new Error('Aggregate needs an expression or array of expressions to aggregate by');
+      throw new Error('Aggregate needs an expression or array of expressions to aggregate by')
     }
-    return this.mongooseModel.aggregate(expression).exec();
+    return this.mongooseModel.aggregate(expression).exec()
   }
 
-  find(query, projection, queryOptions, sortObject) {
-    queryOptions = queryOptions || {};
+  find (query, projection, queryOptions, sortObject) {
+    queryOptions = queryOptions || {}
     const options = {
       lean: queryOptions.castToMongoose !== true,
       limit: queryOptions.limit,
       skip: queryOptions.offset
-    };
-    let mongoQuery = this.mongooseModel.find(query, projection, options);
-    if (_.isObject(sortObject)) {
-      mongoQuery = mongoQuery.sort(sortObject);
     }
-    return mongoQuery.exec();
+    let mongoQuery = this.mongooseModel.find(query, projection, options)
+    if (_.isObject(sortObject)) {
+      mongoQuery = mongoQuery.sort(sortObject)
+    }
+    return mongoQuery.exec()
   }
 
-  findStream(query, transformFunc, projection, queryOptions, populateField, populateProjection, sortObject) {
-    queryOptions = queryOptions || {};
+  findStream (query, transformFunc, projection, queryOptions, populateField, populateProjection, sortObject) {
+    queryOptions = queryOptions || {}
     const options = {
       lean: queryOptions.castToMongoose !== true,
       limit: queryOptions.limit,
       skip: queryOptions.offset
-    };
-    const mongoQuery = this.mongooseModel.find(query, projection, options);
-    const transformObj = {};
-    if(_.isFunction(transformFunc)) {
-      transformObj.transform = transformFunc;
     }
-    if(_.isString(populateField)) {
-      return mongoQuery.populate(populateField, populateProjection).sort(sortObject).stream(transformObj);
+    const mongoQuery = this.mongooseModel.find(query, projection, options)
+    const transformObj = {}
+    if (_.isFunction(transformFunc)) {
+      transformObj.transform = transformFunc
     }
-    return mongoQuery.sort(sortObject).stream(transformObj);
+    if (_.isString(populateField)) {
+      return mongoQuery.populate(populateField, populateProjection).sort(sortObject).stream(transformObj)
+    }
+    return mongoQuery.sort(sortObject).stream(transformObj)
   }
 
-  findOne(query, projection, sortObject) {
-    query = this.mongooseModel.findOne(query, projection);
+  findOne (query, projection, sortObject) {
+    query = this.mongooseModel.findOne(query, projection)
     if (_.isObject(sortObject)) {
-      query = query.sort(sortObject);
+      query = query.sort(sortObject)
     }
-    return query.exec();
+    return query.exec()
   }
 
-  findById(id, projection) {
-    return this.mongooseModel.findById(id, projection).exec();
+  findById (id, projection) {
+    return this.mongooseModel.findById(id, projection).exec()
   }
 
-  create(doc) {
-    return this.mongooseModel.create(doc);
+  create (doc) {
+    return this.mongooseModel.create(doc)
   }
 
-  count(query) {
-    return this.mongooseModel.count(query).exec();
+  count (query) {
+    return this.mongooseModel.count(query).exec()
   }
 
-  insertMany(docs) {
+  insertMany (docs) {
     return new Promise((resolve, reject) => {
       this.mongooseModel.collection.insertMany(docs, {}, (err, result) => {
         if (err) {
-          return reject(err);
+          return reject(err)
         }
 
-        resolve(result.ops);
-      });
-    });
+        resolve(result.ops)
+      })
+    })
   }
 
-  pull(doc, pullQuery) {
+  pull (doc, pullQuery) {
     return this.mongooseModel.collection.update({_id: doc._id}, {$pull: pullQuery})
   }
 
-  removeWhere(query) {
-    return this.mongooseModel.remove(query);
+  removeWhere (query) {
+    return this.mongooseModel.remove(query)
   }
 
-  remove(doc) {
+  remove (doc) {
     return this.mongooseModel.findById(doc._id).exec()
       .then((foundDoc) => {
-        if(!foundDoc) {
-          return Promise.resolve();
+        if (!foundDoc) {
+          return Promise.resolve()
         }
 
-        return foundDoc.remove();
-      });
+        return foundDoc.remove()
+      })
   }
 
-  update(doc) {
-    const _update = this.update.bind(this);
+  update (doc) {
+    const _update = this.update.bind(this)
     return this.mongooseModel.findById(doc._id).exec()
       .then((foundDoc) => {
-        if(!foundDoc) {
-          throw new Error('trying to update doc that does not exist id: ' + doc._id);
+        if (!foundDoc) {
+          throw new Error('trying to update doc that does not exist id: ' + doc._id)
         }
 
-        if(_.isFunction(doc.toObject)) {
-          doc = doc.toObject();
+        if (_.isFunction(doc.toObject)) {
+          doc = doc.toObject()
         }
-        foundDoc.merge(doc);
+        foundDoc.merge(doc)
         return foundDoc.save()
           .then(null, reason => {
-            if(reason.name === 'VersionError') {
-              return _update(foundDoc);
+            if (reason.name === 'VersionError') {
+              return _update(foundDoc)
             }
-            return Promise.reject(reason);
-          });
-      });
+            return Promise.reject(reason)
+          })
+      })
   }
 
-  updateMany(ids, update) {
-    return this.mongooseModel.update({_id: {$in: ids}}, update, {multi: true}).exec();
+  updateMany (ids, update) {
+    return this.mongooseModel.update({_id: {$in: ids}}, update, {multi: true}).exec()
   }
 
-  incrementField(doc, incrementField, incrementValue) {
+  incrementField (doc, incrementField, incrementValue) {
     return this.mongooseModel.findById(doc._id).exec()
       .then((foundDoc) => {
-        if(!foundDoc) {
-          throw new Error('trying to update doc that does not exist id: ' + doc._id);
+        if (!foundDoc) {
+          throw new Error('trying to update doc that does not exist id: ' + doc._id)
         }
-        const incrementOperator = {$inc: {}};
-        incrementOperator.$inc[incrementField] = incrementValue;
-        return this.mongooseModel.update({_id: foundDoc._id}, incrementOperator).exec();
-      });
+        const incrementOperator = {$inc: {}}
+        incrementOperator.$inc[incrementField] = incrementValue
+        return this.mongooseModel.update({_id: foundDoc._id}, incrementOperator).exec()
+      })
   }
 }

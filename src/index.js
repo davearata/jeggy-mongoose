@@ -1,3 +1,3 @@
-export { MongooseCollection } from './MongooseCollection';
+export { MongooseCollection } from './MongooseCollection'
 
-export { MongooseAdapter } from './MongooseAdapter';
+export { MongooseAdapter } from './MongooseAdapter'
