@@ -10,6 +10,12 @@ export class MongooseCollection extends Collection {
     this.mongooseModel = mongooseModel;
   }
 
+  addToSet(doc, arrayKey, value) {
+    const updateObj = {}
+    updateObj[arrayKey] = value
+    return this.mongooseModel.collection.update({_id: doc._id}, {$addToSet: updateObj})
+  }
+
   aggregate(expression) {
     if (!_.isObject(expression) || !_.isArray(expression)) {
       throw new Error('Aggregate needs an expression or array of expressions to aggregate by');
