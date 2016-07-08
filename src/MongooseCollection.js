@@ -87,6 +87,10 @@ export class MongooseCollection extends Collection {
     });
   }
 
+  pull(doc, pullQuery) {
+    return this.mongooseModel.collection.update({_id: doc._id}, {$pull: pullQuery})
+  }
+
   removeWhere(query) {
     return this.mongooseModel.remove(query);
   }
