@@ -7,12 +7,22 @@ import { MongooseCollection } from '../../src/MongooseCollection'
 const mongoUri = 'mongodb://localhost/jeggy-mongoose-test'
 const mongooseConnection = mongooseMob.getConnection(mongoUri)
 mongooseConnection.base.plugin(merge)
-const mongooseModel = mongooseMob.getModel(mongooseConnection, 'Test', new mongooseMob.Schema({
+const testSchema = new mongooseMob.Schema({
   arr: [{type: String}],
   data: {
     str: {type: String}
-  }
-}))
+  },
+  nonVirtualField: {type: String}
+})
+
+testSchema.virtual('virtualField').set(function (virtualField) {
+  this._virt = virtualField
+  this.nonVirtualField = virtualField
+}).get(function () {
+  return this._virt
+})
+
+const mongooseModel = mongooseMob.getModel(mongooseConnection, 'Test', testSchema)
 const collection = new MongooseCollection('Test', mongooseModel)
 
 describe('MongooseCollection e2e', function () {
@@ -78,6 +88,15 @@ describe('MongooseCollection e2e', function () {
       expect(updated).to.be.an('object')
       expect(updated.arr[0]).to.be.equal('new test')
       expect(updated.data.str).to.be.equal('12345')
+    })
+  })
+
+  it('should be able to update an object\'s virtual field', function () {
+    return co(function * () {
+      const testObj = yield collection.create({arr: ['test'], data: {str: 'abc123'}})
+      testObj.virtualField = 'this should save'
+      const updated = yield collection.update(testObj)
+      expect(updated.nonVirtualField).to.equal('this should save')
     })
   })
 

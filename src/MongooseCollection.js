@@ -125,7 +125,7 @@ export class MongooseCollection extends Collection {
       if (_.isFunction(doc.toObject)) {
         doc = doc.toObject()
       }
-      foundDoc.merge(doc)
+      foundDoc.merge(doc, {virtuals: true})
       try {
         return foundDoc.save()
       } catch (err) {

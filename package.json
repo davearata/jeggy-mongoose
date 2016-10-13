@@ -1,6 +1,6 @@
 {
   "name": "jeggy-mongoose",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Jeggy adapter for mongoose",
   "files": [
     "dist"
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "co": "^4.6.0",
-    "jeggy": "^0.3.0",
+    "jeggy": "^1.0.0",
     "lodash": "^4.16.4",
     "mongoose-merge-plugin": "0.0.5",
     "mongoose-mob": "^1.0.0"
