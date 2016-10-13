@@ -72,8 +72,6 @@ export class MongooseAdapter extends Adapter {
     })
 
     return Promise.all(promises)
-      .then(() => {
-        return docs
-      })
+      .then(() => docs)
   }
 }

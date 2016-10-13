@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import co from 'co'
 import { Collection } from 'jeggy'
 
 export class MongooseCollection extends Collection {
@@ -55,16 +56,24 @@ export class MongooseCollection extends Collection {
     return mongoQuery.sort(sortObject).stream(transformObj)
   }
 
-  findOne (query, projection, sortObject) {
-    query = this.mongooseModel.findOne(query, projection)
+  findOne (query, projection, sortObject, queryOptions) {
+    queryOptions = queryOptions || {}
+    const options = {
+      lean: queryOptions.castToMongoose !== true
+    }
+    query = this.mongooseModel.findOne(query, projection, options)
     if (_.isObject(sortObject)) {
       query = query.sort(sortObject)
     }
     return query.exec()
   }
 
-  findById (id, projection) {
-    return this.mongooseModel.findById(id, projection).exec()
+  findById (id, projection, queryOptions) {
+    queryOptions = queryOptions || {}
+    const options = {
+      lean: queryOptions.castToMongoose !== true
+    }
+    return this.mongooseModel.findById(id, projection, options).exec()
   }
 
   create (doc) {
@@ -96,36 +105,36 @@ export class MongooseCollection extends Collection {
   }
 
   remove (doc) {
-    return this.mongooseModel.findById(doc._id).exec()
-      .then((foundDoc) => {
-        if (!foundDoc) {
-          return Promise.resolve()
-        }
+    return co.call(this, function * () {
+      const foundDoc = yield this.mongooseModel.findById(doc._id).exec()
+      if (!foundDoc) {
+        return
+      }
 
-        return foundDoc.remove()
-      })
+      return foundDoc.remove()
+    })
   }
 
   update (doc) {
-    const _update = this.update.bind(this)
-    return this.mongooseModel.findById(doc._id).exec()
-      .then((foundDoc) => {
-        if (!foundDoc) {
-          throw new Error('trying to update doc that does not exist id: ' + doc._id)
-        }
+    return co.call(this, function * () {
+      const foundDoc = yield this.mongooseModel.findById(doc._id).exec()
+      if (!foundDoc) {
+        throw new Error('trying to update doc that does not exist id: ' + doc._id)
+      }
 
-        if (_.isFunction(doc.toObject)) {
-          doc = doc.toObject()
-        }
-        foundDoc.merge(doc)
+      if (_.isFunction(doc.toObject)) {
+        doc = doc.toObject()
+      }
+      foundDoc.merge(doc)
+      try {
         return foundDoc.save()
-          .then(null, reason => {
-            if (reason.name === 'VersionError') {
-              return _update(foundDoc)
-            }
-            return Promise.reject(reason)
-          })
-      })
+      } catch (err) {
+        if (err.name === 'VersionError') {
+          return this.update(foundDoc)
+        }
+        return Promise.reject(err)
+      }
+    })
   }
 
   updateMany (ids, update) {
@@ -133,14 +142,14 @@ export class MongooseCollection extends Collection {
   }
 
   incrementField (doc, incrementField, incrementValue) {
-    return this.mongooseModel.findById(doc._id).exec()
-      .then((foundDoc) => {
-        if (!foundDoc) {
-          throw new Error('trying to update doc that does not exist id: ' + doc._id)
-        }
-        const incrementOperator = {$inc: {}}
-        incrementOperator.$inc[incrementField] = incrementValue
-        return this.mongooseModel.update({_id: foundDoc._id}, incrementOperator).exec()
-      })
+    return co.call(this, function * () {
+      const foundDoc = yield this.mongooseModel.findById(doc._id).exec()
+      if (!foundDoc) {
+        throw new Error('trying to update doc that does not exist id: ' + doc._id)
+      }
+      const incrementOperator = {$inc: {}}
+      incrementOperator.$inc[incrementField] = incrementValue
+      return this.mongooseModel.update({_id: foundDoc._id}, incrementOperator).exec()
+    })
   }
 }

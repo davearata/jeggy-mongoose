@@ -1,4 +1,7 @@
+import _ from 'lodash'
+import co from 'co'
 import faker from 'faker'
+import sequential from 'promise-sequential'
 
 const buildFile = function buildFile (parentFolderId, filesColleciton) {
   const doc = {
@@ -19,35 +22,29 @@ const buildFolder = function buildFolder (foldersCollection, paentFolderId) {
   return foldersCollection.create(doc)
 }
 
+const buildSequentially = (amount, buildFn) => {
+  const builds = []
+  _.times(amount, () => builds.push(buildFn))
+  return sequential(builds)
+}
+
 const buildSubFoldersAndFiles = function buildSubFoldersAndFiles (amount, parentFolderId, filesColleciton, foldersCollection) {
-  return buildFolder(foldersCollection, parentFolderId)
-    .then(function (folder) {
-      let promise = Promise.resolve()
-      const build = buildFile.bind(this, folder._id, filesColleciton)
-      for (let index = 0; index < amount; index++) {
-        promise = promise.then(build)
-      }
-      return promise
-    })
+  return co.call(this, function * () {
+    const folder = yield buildFolder(foldersCollection, parentFolderId)
+    const build = buildFile.bind(this, folder._id, filesColleciton)
+    return buildSequentially(amount, build)
+  })
 }
 
 const buildFoldersAndFiles = function buildFoldersAndFiles (amount, filesColleciton, foldersCollection) {
-  return buildFolder(foldersCollection)
-    .then(function (folder) {
-      let promise = Promise.resolve()
-      const build = buildSubFoldersAndFiles.bind(this, amount, folder._id, filesColleciton, foldersCollection)
-      for (let index = 0; index < amount; index++) {
-        promise = promise.then(build)
-      }
-      return promise
-    })
+  return co.call(this, function * () {
+    const folder = yield buildFolder(foldersCollection)
+    const build = buildSubFoldersAndFiles.bind(this, amount, folder._id, filesColleciton, foldersCollection)
+    return buildSequentially(amount, build)
+  })
 }
 
 export default function loadData (amount, filesColleciton, foldersCollection) {
-  let promise = Promise.resolve()
   const build = buildFoldersAndFiles.bind(this, amount, filesColleciton, foldersCollection)
-  for (let index = 0; index < amount; index++) {
-    promise = promise.then(build)
-  }
-  return promise
+  return buildSequentially(amount, build)
 }

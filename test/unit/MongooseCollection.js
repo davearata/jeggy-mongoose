@@ -1,12 +1,12 @@
 import { MongooseCollection } from '../../src/MongooseCollection'
 
-describe('MongooseCollection', () => {
+describe('MongooseCollection', function () {
   let sandbox
   let collection
   let promise
   let resolvedDoc
 
-  beforeEach(() => {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create()
     promise = new Promise((resolve) => {
       resolve(resolvedDoc)
@@ -30,79 +30,66 @@ describe('MongooseCollection', () => {
     sandbox.restore()
   })
 
-  it('should throw an error if intiialized without a mongoose model', () => {
+  it('should throw an error if intiialized without a mongoose model', function () {
     expect(() => {
       const errorTestCollection = new MongooseCollection('errorTest')
       errorTestCollection.find()
     }).to.throw(Error)
   })
 
-  it('should implement find', () => {
+  it('should implement find', function () {
     expect(() => {
       collection.find()
     }).to.not.throw()
   })
 
-  it('should implement findOne', () => {
+  it('should implement findOne', function () {
     expect(() => {
       collection.findOne()
     }).to.not.throw()
   })
 
-  it('should implement findById', () => {
+  it('should implement findById', function () {
     expect(() => {
       collection.findById()
     }).to.not.throw()
   })
 
-  it('should implement create', () => {
+  it('should implement create', function () {
     expect(() => {
       collection.create()
     }).to.not.throw()
   })
 
-  it('should implement count', () => {
+  it('should implement count', function () {
     expect(() => {
       collection.count()
     }).to.not.throw()
   })
 
-  it('should implement removeWhere', () => {
+  it('should implement removeWhere', function () {
     expect(() => {
       collection.removeWhere()
     }).to.not.throw()
   })
 
-  it('should implement remove', () => {
+  it('should implement remove', function () {
     expect(() => {
       collection.remove({_id: 123})
     }).to.not.throw()
   })
 
-  it('should resolve if it can not find the doc to remove', (done) => {
-    collection.remove({_id: 123})
-      .then(() => {
-        done()
-      })
-      .then(null, (reason) => {
-        done(reason)
-      })
+  it('should resolve if it can not find the doc to remove', function () {
+    return collection.remove({_id: 123}).should.be.fulfilled
   })
 
-  it('should implement update', () => {
+  it('should implement update', function () {
     expect(() => {
       collection.update({_id: 123})
     }).to.not.throw()
   })
 
-  it('should throw an error if it can not find the doc to update', (done) => {
-    collection.update({_id: 123})
-      .then(() => {
-        done(new Error('this should not have resolved'))
-      })
-      .then(null, (reason) => {
-        expect(reason).to.be.an('error')
-        done()
-      })
+  it('should throw an error if it can not find the doc to update', function () {
+    return collection.update({_id: 123}).should.be.rejectedWith(Error)
   })
 })
