@@ -24,8 +24,6 @@ export class MongooseAdapter extends Adapter {
       mongooseConnection = mongooseMob.getConnection(mongooseConnection, opts)
     }
 
-    mongooseConnection.base.plugin(merge)
-
     this.mongooseConnection = mongooseConnection
     this.collections = {}
   }
@@ -39,6 +37,7 @@ export class MongooseAdapter extends Adapter {
       if (!_.isString(name) || _.isEmpty(name)) {
         throw new Error('must provide a name when adding a collection')
       }
+      schema.plugin(merge)
       const mongooseModel = mongooseMob.getModel(this.mongooseConnection, name, schema)
       collection = new MongooseCollection(name, mongooseModel)
     }
