@@ -100,6 +100,10 @@ export class MongooseCollection extends Collection {
     return this.mongooseModel.collection.update({_id: doc._id}, {$pull: pullQuery})
   }
 
+  rawUpdate (findQuery, updateQuery) {
+    return this.mongooseModel.collection.update(findQuery, updateQuery)
+  }
+
   removeWhere (query) {
     return this.mongooseModel.remove(query)
   }
