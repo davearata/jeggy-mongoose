@@ -145,4 +145,66 @@ describe('MongooseCollection e2e', function () {
       })
     })
   })
+
+  it('should be able to addToSet by query', function () {
+    const docs = [
+      {arr: ['test']},
+      {arr: ['test1']},
+      {arr: ['test2']}
+    ]
+    return co(function * () {
+      const result = yield collection.insertMany(docs)
+      const ids = _.map(result, '_id')
+      const addToSetByQueryResult = yield collection.addToSetByQuery({_id: {$in: ids}}, 'arr', 'newvalue')
+      expect(addToSetByQueryResult.nModified).to.equal(3)
+      const updated = yield collection.find({_id: {$in: ids}})
+      _.forEach(updated, item => {
+        expect(item.arr.length).to.equal(2)
+        expect(_.includes(item.arr, 'newvalue')).to.equal(true)
+      })
+    })
+  })
+
+  it('should be able to addToSet for a single doc without a query', function () {
+    const doc = {arr: ['test']}
+    return co(function * () {
+      const result = yield collection.create(doc)
+      const addToSetResult = yield collection.addToSet(result, 'arr', 'newvalue')
+      expect(addToSetResult.nModified).to.equal(1)
+      const updatedDoc = yield collection.findOne({_id: result._id})
+      expect(updatedDoc.arr.length).to.equal(2)
+      expect(_.includes(updatedDoc.arr, 'newvalue')).to.equal(true)
+    })
+  })
+
+  it('should be able to pull by query', function () {
+    const docs = [
+      {arr: ['test']},
+      {arr: ['test']},
+      {arr: ['test']}
+    ]
+    return co(function * () {
+      const result = yield collection.insertMany(docs)
+      const ids = _.map(result, '_id')
+      const pullByQueryResult = yield collection.pullByQuery({_id: {$in: ids}}, {arr: 'test'})
+      expect(pullByQueryResult.nModified).to.equal(3)
+      const updated = yield collection.find({_id: {$in: ids}})
+      _.forEach(updated, item => {
+        expect(item.arr.length).to.equal(0)
+        expect(_.includes(item.arr, 'test')).to.equal(false)
+      })
+    })
+  })
+
+  it('should be able to pull for a single doc without a query', function () {
+    const doc = {arr: ['test']}
+    return co(function * () {
+      const result = yield collection.create(doc)
+      const pullResult = yield collection.pull(result, {arr: 'test'})
+      expect(pullResult.nModified).to.equal(1)
+      const updatedDoc = yield collection.findOne({_id: result._id})
+      expect(updatedDoc.arr.length).to.equal(0)
+      expect(_.includes(updatedDoc.arr, 'test')).to.equal(false)
+    })
+  })
 })

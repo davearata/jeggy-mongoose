@@ -12,9 +12,21 @@ export class MongooseCollection extends Collection {
   }
 
   addToSet (doc, arrayKey, value) {
-    const updateObj = {}
-    updateObj[arrayKey] = value
-    return this.mongooseModel.collection.update({_id: doc._id}, {$addToSet: updateObj})
+    return co.call(this, function * () {
+      const updateObj = {}
+      updateObj[arrayKey] = value
+      const res = yield this.mongooseModel.collection.update({_id: doc._id}, {$addToSet: updateObj})
+      return res.result
+    })
+  }
+
+  addToSetByQuery (query, arrayKey, value) {
+    return co.call(this, function * () {
+      const updateObj = {}
+      updateObj[arrayKey] = value
+      const res = yield this.mongooseModel.collection.update(query, {$addToSet: updateObj}, {multi: true})
+      return res.result
+    })
   }
 
   aggregate (expression) {
@@ -97,7 +109,17 @@ export class MongooseCollection extends Collection {
   }
 
   pull (doc, pullQuery) {
-    return this.mongooseModel.collection.update({_id: doc._id}, {$pull: pullQuery})
+    return co.call(this, function * () {
+      const res = yield this.mongooseModel.collection.update({_id: doc._id}, {$pull: pullQuery})
+      return res.result
+    })
+  }
+
+  pullByQuery (query, pullQuery) {
+    return co.call(this, function * () {
+      const res = yield this.mongooseModel.collection.update(query, {$pull: pullQuery}, {multi: true})
+      return res.result
+    })
   }
 
   rawUpdate (findQuery, updateQuery) {
