@@ -15,6 +15,15 @@ const testSchema = new mongooseMob.Schema({
   nonVirtualField: {type: String}
 })
 
+const documentArraySchema = new mongooseMob.Schema({
+  arr: [
+    {user: String, priority: Number}
+  ],
+  data: {
+    str: {type: String}
+  }
+})
+
 testSchema.virtual('virtualField').set(function (virtualField) {
   this._virt = virtualField
   this.nonVirtualField = virtualField
@@ -24,6 +33,9 @@ testSchema.virtual('virtualField').set(function (virtualField) {
 
 const mongooseModel = mongooseMob.getModel(mongooseConnection, 'Test', testSchema)
 const collection = new MongooseCollection('Test', mongooseModel)
+
+const documentArrayModel = mongooseMob.getModel(mongooseConnection, 'Test1', documentArraySchema)
+const documentArrayCollection = new MongooseCollection('Test1', documentArrayModel)
 
 describe('MongooseCollection e2e', function () {
   beforeEach(function (done) {
@@ -205,6 +217,37 @@ describe('MongooseCollection e2e', function () {
       const updatedDoc = yield collection.findOne({_id: result._id})
       expect(updatedDoc.arr.length).to.equal(0)
       expect(_.includes(updatedDoc.arr, 'test')).to.equal(false)
+    })
+  })
+
+  it('should should not add the document to the set because the query should filter the document out', function () {
+    const doc = {arr: [{user: 'me', priority: Date.now()}]}
+    return co(function * () {
+      const result = yield documentArrayCollection.create(doc)
+      yield documentArrayCollection.addToSetByQuery({_id: result._id, 'arr.user': {$ne: 'me'}}, 'arr', {user: 'me', priorty: Date.now()})
+      const updated = yield documentArrayCollection.findOne({_id: result._id})
+      updated.arr.length.should.equal(1)
+    })
+  })
+
+  it('should add the document to the set because the query should not filter the document out', function () {
+    const doc = {arr: [{user: 'me', priority: Date.now()}]}
+    return co(function * () {
+      const result = yield documentArrayCollection.create(doc)
+      yield documentArrayCollection.addToSetByQuery({_id: result._id}, 'arr', {user: 'me', priorty: Date.now()})
+      const updated = yield documentArrayCollection.findOne({_id: result._id})
+      updated.arr.length.should.equal(2)
+    })
+  })
+
+  it('should be able to pull a document in an array by query', function () {
+    const doc = {arr: [{user: 'me', priority: Date.now()}, {user: 'you', priority: Date.now()}]}
+    return co(function * () {
+      const result = yield documentArrayCollection.create(doc)
+      yield documentArrayCollection.pullByQuery({_id: result._id}, {arr: {user: 'you'}})
+      const updated = yield documentArrayCollection.findOne(result._id)
+      updated.arr.length.should.equal(1)
+      updated.arr[0].user.should.equal('me')
     })
   })
 })
