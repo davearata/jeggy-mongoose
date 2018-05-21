@@ -1,6 +1,6 @@
 {
   "name": "jeggy-mongoose",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Jeggy adapter for mongoose",
   "files": [
     "dist"
@@ -38,7 +38,7 @@
     "jeggy": "^1.0.0",
     "lodash": "^4.16.4",
     "mongoose-merge-plugin": "0.0.5",
-    "mongoose-mob": "^1.0.0"
+    "mongoose-mob": "^2.0.0"
   },
   "scripts": {
     "build": "babel src --out-dir dist",
