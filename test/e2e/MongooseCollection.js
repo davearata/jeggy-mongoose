@@ -9,6 +9,10 @@ const mongooseConnection = mongooseMob.getConnection(mongoUri)
 mongooseConnection.base.plugin(merge)
 const testSchema = new mongooseMob.Schema({
   arr: [{type: String}],
+  account: Number,
+  item: Number,
+  date: Number,
+  itemType: String,
   data: {
     str: {type: String}
   },
@@ -248,6 +252,77 @@ describe('MongooseCollection e2e', function () {
       const updated = yield documentArrayCollection.findOne(result._id)
       updated.arr.length.should.equal(1)
       updated.arr[0].user.should.equal('me')
+    })
+  })
+
+  it('should be able to aggregate', function () {
+    const docs = [{
+      account: 1,
+      item: 1,
+      date: 2,
+      itemType: 'CONTENT'
+
+    },
+    {
+      account: 2,
+      item: 1,
+      date: 2,
+      itemType: 'CONTENT'
+
+    },
+    {
+      account: 1,
+      item: 1,
+      date: 2,
+      itemType: 'CONTENT'
+
+    },
+    {
+      account: 1,
+      item: 1,
+      date: 1,
+      itemType: 'CONTENT'
+
+    },
+    {
+      account: 1,
+      item: 2,
+      date: 4,
+      itemType: 'CONTENT'
+
+    }
+    ]
+
+    return co(function* () {
+      yield collection.insertMany(docs)
+
+      const exp = [
+        {
+          $match: {
+            account: 1
+          }
+        }, {
+          $group: {
+            _id: '$item',
+            item: {
+              $first: '$item'
+            },
+            itemType: {$first: '$itemType'},
+            sum: {
+              $sum: 1
+            }
+          }
+        }, {
+          $sort: {
+            sum: -1
+
+          }
+        }
+      ]
+      const aggResult = yield collection.aggregate(exp)
+      aggResult.length.should.equal(2)
+      aggResult[0].sum.should.equal(3)
+      aggResult[1].sum.should.equal(1)
     })
   })
 })
