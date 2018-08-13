@@ -36,7 +36,7 @@ export class MongooseCollection extends Collection {
     return this.mongooseModel.aggregate(expression).exec()
   }
 
-  find (query, projection, queryOptions, sortObject) {
+  find (query, projection, queryOptions, sortString) {
     queryOptions = queryOptions || {}
     const options = {
       lean: queryOptions.castToMongoose !== true,
@@ -44,13 +44,13 @@ export class MongooseCollection extends Collection {
       skip: queryOptions.offset
     }
     let mongoQuery = this.mongooseModel.find(query, projection, options)
-    if (_.isObject(sortObject)) {
-      mongoQuery = mongoQuery.sort(sortObject)
+    if (sortString) {
+      mongoQuery = mongoQuery.sort(sortString)
     }
     return mongoQuery.exec()
   }
 
-  findStream (query, transformFunc, projection, queryOptions, populateField, populateProjection, sortObject) {
+  findStream (query, transformFunc, projection, queryOptions, populateField, populateProjection, sortString) {
     queryOptions = queryOptions || {}
     const options = {
       lean: queryOptions.castToMongoose !== true,
@@ -63,19 +63,19 @@ export class MongooseCollection extends Collection {
       transformObj.transform = transformFunc
     }
     if (_.isString(populateField)) {
-      return mongoQuery.populate(populateField, populateProjection).sort(sortObject).stream(transformObj)
+      return mongoQuery.populate(populateField, populateProjection).sort(sortString).stream(transformObj)
     }
-    return mongoQuery.sort(sortObject).stream(transformObj)
+    return mongoQuery.sort(sortString).stream(transformObj)
   }
 
-  findOne (query, projection, sortObject, queryOptions) {
+  findOne (query, projection, sortString, queryOptions) {
     queryOptions = queryOptions || {}
     const options = {
       lean: queryOptions.castToMongoose !== true
     }
     query = this.mongooseModel.findOne(query, projection, options)
-    if (_.isObject(sortObject)) {
-      query = query.sort(sortObject)
+    if (sortString) {
+      query = query.sort(sortString)
     }
     return query.exec()
   }
