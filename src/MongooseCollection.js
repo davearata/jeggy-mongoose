@@ -44,7 +44,7 @@ export class MongooseCollection extends Collection {
       skip: queryOptions.offset
     }
     let mongoQuery = this.mongooseModel.find(query, projection, options)
-    if (_.isString(sortString)) {
+    if (sortString) {
       mongoQuery = mongoQuery.sort(sortString)
     }
     return mongoQuery.exec()
@@ -74,7 +74,7 @@ export class MongooseCollection extends Collection {
       lean: queryOptions.castToMongoose !== true
     }
     query = this.mongooseModel.findOne(query, projection, options)
-    if (_.isString(sortString)) {
+    if (sortString) {
       query = query.sort(sortString)
     }
     return query.exec()
