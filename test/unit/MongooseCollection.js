@@ -3,26 +3,22 @@ import { MongooseCollection } from '../../src/MongooseCollection'
 describe('MongooseCollection', function () {
   let sandbox
   let collection
-  let promise
-  let resolvedDoc
+  let cursor
 
   beforeEach(function () {
-    sandbox = sinon.sandbox.create()
-    promise = new Promise((resolve) => {
-      resolve(resolvedDoc)
-    })
-    const execObj = {
-      exec: sandbox.stub().returns(promise)
+    sandbox = sinon.createSandbox()
+    cursor = {
+      exec: sandbox.stub()
     }
     collection = new MongooseCollection('test', {
-      find: sandbox.stub().returns(execObj),
-      findOne: sandbox.stub().returns(execObj),
-      findById: sandbox.stub().returns(execObj),
+      find: sandbox.stub().returns(cursor),
+      findOne: sandbox.stub().returns(cursor),
+      findById: sandbox.stub().returns(cursor),
       create: sandbox.stub(),
       removeWhere: sandbox.stub(),
       remove: sandbox.stub(),
       update: sandbox.stub(),
-      count: sandbox.stub().returns(execObj)
+      count: sandbox.stub().returns(cursor)
     })
   })
 
@@ -74,19 +70,21 @@ describe('MongooseCollection', function () {
   })
 
   it('should implement remove', function () {
-    expect(() => {
-      collection.remove({_id: 123})
-    }).to.not.throw()
+    const resolvedDoc = {_id: 123, remove: () => {}, merge: () => resolvedDoc, save: () => resolvedDoc}
+    cursor.exec.resolves(resolvedDoc)
+    return collection.remove({_id: 123}).should.be.fulfilled
   })
 
   it('should resolve if it can not find the doc to remove', function () {
+    const resolvedDoc = {_id: 123, remove: () => {}, merge: () => resolvedDoc, save: () => resolvedDoc}
+    cursor.exec.resolves(resolvedDoc)
     return collection.remove({_id: 123}).should.be.fulfilled
   })
 
   it('should implement update', function () {
-    expect(() => {
-      collection.update({_id: 123})
-    }).to.not.throw()
+    const resolvedDoc = {_id: 123, merge: () => resolvedDoc, save: () => resolvedDoc}
+    cursor.exec.resolves(resolvedDoc)
+    return collection.update({_id: 123})
   })
 
   it('should throw an error if it can not find the doc to update', function () {

@@ -18,8 +18,8 @@
     "babel-core": "^6.17.0",
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^3.7.1",
     "eslint-config-standard": "^6.2.0",
     "eslint-plugin-promise": "^3.0.0",
@@ -30,13 +30,13 @@
     "mocha": "^3.1.2",
     "mockery": "^2.0.0",
     "promise-sequential": "^1.1.1",
-    "sinon": "^1.17.6",
-    "sinon-chai": "^2.8.0"
+    "sinon": "^6.2.0",
+    "sinon-chai": "^3.2.0"
   },
   "dependencies": {
     "co": "^4.6.0",
     "jeggy": "^1.0.0",
-    "lodash": "^4.16.4",
+    "lodash": "^4.17.10",
     "mongoose-merge-plugin": "0.0.5",
     "mongoose-mob": "^2.0.0"
   },
@@ -46,7 +46,7 @@
     "cover": "isparta cover --report text --report html _mocha --include-all-sources --root src/ -- --compilers js:babel-core/register --require babel-polyfill --require ./test/index.js 'test/**/*.js'",
     "lint-staged": "lint-staged",
     "lint": "eslint ./",
-    "test": "mocha --reporter nyan --compilers js:babel-core/register --require babel-polyfill --require ./test/index.js 'test/**/*.js'",
+    "test": "mocha --reporter spec --compilers js:babel-core/register --require babel-polyfill --require ./test/index.js 'test/**/*.js'",
     "prepublish": "npm run clean && npm run build"
   },
   "pre-commit": [

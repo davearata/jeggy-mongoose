@@ -28,6 +28,18 @@ const documentArraySchema = new mongooseMob.Schema({
   }
 })
 
+const postSchema = new mongooseMob.Schema({
+  title: String,
+  author: { type: mongooseMob.Schema.Types.ObjectId, required: true, ref: 'User' }
+})
+
+const userSchema = new mongooseMob.Schema({
+  name: { type: String, required: true },
+  posts: [
+    { type: mongooseMob.Schema.Types.ObjectId, required: true, ref: 'Post' }
+  ]
+})
+
 testSchema.virtual('virtualField').set(function (virtualField) {
   this._virt = virtualField
   this.nonVirtualField = virtualField
@@ -41,9 +53,18 @@ const collection = new MongooseCollection('Test', mongooseModel)
 const documentArrayModel = mongooseMob.getModel(mongooseConnection, 'Test1', documentArraySchema)
 const documentArrayCollection = new MongooseCollection('Test1', documentArrayModel)
 
+const postsModel = mongooseMob.getModel(mongooseConnection, 'Post', postSchema)
+const postCollection = new MongooseCollection('Post', postsModel)
+
+const usersModel = mongooseMob.getModel(mongooseConnection, 'User', userSchema)
+const userCollection = new MongooseCollection('User', usersModel)
+
 describe('MongooseCollection e2e', function () {
   beforeEach(function (done) {
     collection.removeWhere()
+      .then(() => documentArrayCollection.removeWhere())
+      .then(() => postCollection.removeWhere())
+      .then(() => userCollection.removeWhere())
       .then(() => done())
       .then(null, done)
   })
@@ -252,6 +273,26 @@ describe('MongooseCollection e2e', function () {
       const updated = yield documentArrayCollection.findOne(result._id)
       updated.arr.length.should.equal(1)
       updated.arr[0].user.should.equal('me')
+    })
+  })
+
+  it('should be able to populate a stream', function (done) {
+    co(function * () {
+      const userDoc = {name: 'Test User'}
+      const createdUser = yield userCollection.create(userDoc)
+      const postDoc = {title: 'Test Post', author: createdUser._id}
+      yield postCollection.create(postDoc)
+
+      const stream = postCollection.findStream({}, undefined, undefined, undefined, 'author', 'name')
+
+      stream.on('data', function (doc) {
+        doc.author.name.should.equal('Test User')
+        done()
+      })
+
+      stream.on('error', function (err) {
+        done(err)
+      })
     })
   })
 

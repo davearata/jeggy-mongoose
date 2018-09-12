@@ -6,7 +6,7 @@ describe('MongooseAdapter', function () {
   let sandbox
 
   beforeEach(function () {
-    sandbox = sinon.sandbox.create()
+    sandbox = sinon.createSandbox()
     const mongooseMob = {
       getConnection: sandbox.stub().returns({
         base: {
